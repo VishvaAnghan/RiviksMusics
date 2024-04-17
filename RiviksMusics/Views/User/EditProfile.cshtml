@@ -1,7 +1,7 @@
 ﻿@model RiviksMusics.Models.User
 
 @{
-    ViewData["Title"] = "UserEditProfile";
+    ViewData["Title"] = "EditProfile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="UserEditProfile" class="row g-3">
+        <form asp-action="EditProfile" class="row g-3">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group col-md-6">
@@ -41,7 +41,7 @@
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
+                <input asp-for="BirthDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")"/>
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
             <div class="form-group col-md-6">

@@ -43,9 +43,9 @@ namespace RiviksMusics.Controllers
             return View(model);
         }
 
-        public IActionResult editprofile()
+        public IActionResult isusereditprofile()
         {
-            ViewBag.iseditprofile = "active";
+            ViewBag.isusereditprofile = "active";
             return View();
         }
 
@@ -179,21 +179,22 @@ namespace RiviksMusics.Controllers
         }
 
 
-        public IActionResult UserEditProfile(User usereditProfile)
+        
+        public IActionResult EditProfile(User editProfile)
         {
             if (ModelState.IsValid)
             {
-                var applicationUser = _context.Users.Find(usereditProfile.Id);
+                var applicationUser = _context.Users.Find(editProfile.Id);
                 if (applicationUser != null)
                 {
-                    applicationUser.FirstName = usereditProfile.FirstName;
-                    applicationUser.LastName = usereditProfile.LastName;
-                    applicationUser.Email = usereditProfile.Email;
-                    applicationUser.PhoneNo = usereditProfile.PhoneNo;
-                    applicationUser.Address = usereditProfile.Address;
-                    applicationUser.BirthDate = usereditProfile.BirthDate;
-                    applicationUser.Gender = usereditProfile.Gender;
-                    applicationUser.Image = usereditProfile.Image;
+                    applicationUser.FirstName = editProfile.FirstName;
+                    applicationUser.LastName = editProfile.LastName;
+                    applicationUser.Email = editProfile.Email;
+                    applicationUser.PhoneNo = editProfile.PhoneNo;
+                    applicationUser.Address = editProfile.Address;
+                    applicationUser.BirthDate = editProfile.BirthDate;
+                    applicationUser.Gender = editProfile.Gender;
+                    applicationUser.Image = editProfile.Image;
 
                     _context.Users.Update(applicationUser);
                     _context.SaveChanges();
@@ -204,8 +205,9 @@ namespace RiviksMusics.Controllers
                     return NotFound();
                 }
             }
-            return View("UserEditProfile", usereditProfile);
+            return View("EditProfile", editProfile);
             //return RedirectToAction("User");
+
         }
     }
 }
