@@ -1,4 +1,7 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var fullName = @UserManager.GetUserAsync(User).Result.FirstName + " " + @UserManager.GetUserAsync(User).Result.LastName;
 }
 
 <!-- Main Sidebar Container -->
@@ -16,7 +19,7 @@
             <div class="nav-item">
                 <a asp-controller="User" asp-action="EditProfile" class="nav-link @ViewBag.isusereditprofile">
                     <img src="~/img/vishva.jpg" alt="Image" width="40px" style="border-radius:100px;" />
-                    Vishva Anghan
+                    @fullName
                 </a>
             </div>
         </div>
@@ -59,8 +62,12 @@
                     </a>
                 </li>
 
-              
-                    </ul>
+                <li class="nav-item">
+                    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <button type="submit" class="nav-link">Logout</button>
+                    </form>
+                </li>
+            </ul>
         </nav>
         <!-- /.sidebar-menu -->
     </div>

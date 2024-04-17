@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,17 +9,20 @@ using System.Net;
 
 namespace RiviksMusics.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        
         public UserController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
             _context = context;
 
         }
+
         public IActionResult Index()
         {
             return View();
@@ -177,9 +181,6 @@ namespace RiviksMusics.Controllers
             }
             return Json(new { Status = false });
         }
-
-
-        
         public IActionResult EditProfile(User editProfile)
         {
             if (ModelState.IsValid)

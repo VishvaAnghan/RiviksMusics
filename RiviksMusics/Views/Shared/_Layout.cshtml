@@ -1,4 +1,8 @@
 ﻿@using System.Security.Cryptography.X509Certificates
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,32 +39,41 @@
    
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
-    <div class="wrapper">
+    @if (SignInManager.IsSignedIn(User))
+    {
 
-        <!-- Preloader -->
-        <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="~/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+        <div class="wrapper">
+
+            <!-- Preloader -->
+            <div class="preloader flex-column justify-content-center align-items-center">
+                <img class="animation__shake" src="~/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+            </div>
+
+            <partial name="_Navbar" />
+            <partial name="_Sidebar" />
+            <partial name="_Header" />
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper">
+
+                <!-- Main content -->
+                <section class="content">
+                    <div class="container-fluid">
+                        @RenderBody()
+                    </div><!-- /.container-fluid -->
+                </section>
+                <!-- /.content -->
+            </div>
+            <!-- /.content-wrapper -->
         </div>
+        <!-- ./wrapper -->
 
-        <partial name="_Navbar" />
-        <partial name="_Sidebar" />
-        <partial name="_Header"/>
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            
-            <!-- Main content -->
-            <section class="content">
-                <div class="container-fluid">
-                    @RenderBody()
-                </div><!-- /.container-fluid -->
-            </section>
-            <!-- /.content -->
-        </div>
-        <!-- /.content-wrapper -->
-    </div>
-    <!-- ./wrapper -->
+        <partial name="_Footer" />
+    }
+    else
+    {
+        @RenderBody()
+    }
 
-    <partial name="_Footer" />
             
     <!-- jQuery -->
     <script src="~/plugins/jquery/jquery.min.js"></script>
