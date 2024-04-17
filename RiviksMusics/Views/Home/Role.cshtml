@@ -1,0 +1,101 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Home page";
+}
+<h1> Role page</h1>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <partial name="RoleForm" />
+                <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".bd-example-modal-lg">Add</button><br /><br /><br />
+               
+               <div class="card">
+                    <div class="card-body">
+                        <h2 class="text-bold"> Roles </h2>
+                <table class="table table-bordered table-hover">
+                    <tr>
+                        <th>Id</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                    @foreach(var Roles in Model)
+                    {
+                        <tr>
+                            <td>@Roles.Id</td>
+                            <td>@Roles.Name</td>
+                           
+                            <td>
+                                <button type="button" class="btn btn-warning editbtn" data-id="@Roles.Id">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                        <button type="button" class="btn btn-danger deletebtn" data-id="@Roles.Id">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                </div>
+               
+                </div>
+                <!-- /.card -->
+            </div>
+            <!-- /.col -->   
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".editbtn").click(function () {
+
+
+                $.ajax({
+                    url: "@Url.Action("GetRoleById", "Home")",
+                    dataType: "json",
+                    data: { id: $(this).attr("data-id") },
+                    success: function (resp) {
+
+                        $("#roleId").val(resp.id)
+                        $("#Name").val(resp.name)
+                        $('#roleModel').modal('show');
+                    },
+                    error: function (resp) {
+                        console.log("Edit Role error:", resp);
+                    }
+                });
+            })
+
+            $(".deletebtn").click(function () {
+
+            $.ajax({
+                url: "@Url.Action("DeleteRole", "Home")",
+                dataType: "json",
+                data: { id: $(this).attr("data-id") },
+                success: function (resp) {
+
+                    if (resp.status) {
+                        location.reload();
+
+                    }
+                    else {
+                        alert("Role is not delete");
+                    }
+                },
+                error: function (resp) {
+                    console.log("Delete Role error:", resp);
+                }
+            });
+        })
+     })
+    </script>
+    }
+
