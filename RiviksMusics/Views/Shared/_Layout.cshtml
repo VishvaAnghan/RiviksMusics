@@ -1,4 +1,4 @@
-﻿@using System.Security.Cryptography.X509Certificates
+﻿@* @using System.Security.Cryptography.X509Certificates *@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -115,5 +115,7 @@
    @RenderSection("Scripts",required: false)
    @RenderSection("datatable",required:false)
    @RenderSection("deleteuser", required: false)
+   
 </body>
 </html>
+ 

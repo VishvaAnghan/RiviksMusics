@@ -1,8 +1,10 @@
 ﻿using Humanizer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting.Internal;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
 using System.Net;
@@ -15,12 +17,15 @@ namespace RiviksMusics.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        
-        public UserController(ILogger<HomeController> logger, ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+
+
+        public UserController(ILogger<HomeController> logger, ApplicationDbContext context , UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
-
+            _userManager = userManager;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -181,34 +186,51 @@ namespace RiviksMusics.Controllers
             }
             return Json(new { Status = false });
         }
-        public IActionResult EditProfile(User editProfile)
+        public async Task<IActionResult> EditProfile()
+        {
+            var currentUserId = (await _userManager.GetUserAsync(HttpContext.User)).Id;
+            var applicationUser = _context.Users.Find(currentUserId);
+
+            return View("EditProfile", applicationUser);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfile(ApplicationUser user , IFormFile? ImageFile)
         {
             if (ModelState.IsValid)
             {
-                var applicationUser = _context.Users.Find(editProfile.Id);
-                if (applicationUser != null)
-                {
-                    applicationUser.FirstName = editProfile.FirstName;
-                    applicationUser.LastName = editProfile.LastName;
-                    applicationUser.Email = editProfile.Email;
-                    applicationUser.PhoneNo = editProfile.PhoneNo;
-                    applicationUser.Address = editProfile.Address;
-                    applicationUser.BirthDate = editProfile.BirthDate;
-                    applicationUser.Gender = editProfile.Gender;
-                    applicationUser.Image = editProfile.Image;
+                var updateUser = _context.Users.Where(x => x.Id == user.Id).FirstOrDefault();
+                if (updateUser != null) {
+                    updateUser.FirstName = user.FirstName;
+                    updateUser.LastName = user.LastName;    
+                    updateUser.Email = user.Email;
+                    updateUser.PhoneNo = user.PhoneNo;
+                    updateUser.Address = user.Address;
+                    updateUser.BirthDate = user.BirthDate;
+                    updateUser.Gender = user.Gender;
+                    /*updateUser.Image = user.Image;*/
 
-                    _context.Users.Update(applicationUser);
+                    if (ImageFile != null && ImageFile.Length > 0)
+                    {
+                        // Generate a unique file name to avoid conflicts
+                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
+                        var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "img");
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        // Save the file to the specified path
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await ImageFile.CopyToAsync(fileStream);
+                        }
+
+                        // Update user's image path
+                        updateUser.Image = uniqueFileName;
+                    }
                     _context.SaveChanges();
-                    return RedirectToAction("User");
-                }
-                else
-                {
-                    return NotFound();
                 }
             }
-            return View("EditProfile", editProfile);
-            //return RedirectToAction("User");
 
+            return View("EditProfile", user);
         }
     }
 }
