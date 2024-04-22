@@ -13,39 +13,40 @@
             <div class="col-12">
                 <partial name="RoleForm" />
                 <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".bd-example-modal-lg">Add</button><br /><br /><br />
-               
-               <div class="card">
+
+                <div class="card">
                     <div class="card-body">
                         <h2 class="text-bold"> Roles </h2>
-                <table class="table table-bordered table-hover">
-                    <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Action</th>
-                    </tr>
-                    @foreach(var Roles in Model)
-                    {
-                        <tr>
-                            <td>@Roles.Id</td>
-                            <td>@Roles.Name</td>
-                           
-                            <td>
-                                <button type="button" class="btn btn-warning editbtn" data-id="@Roles.Id">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                        <button type="button" class="btn btn-danger deletebtn" data-id="@Roles.Id">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                </table>
-                </div>
-               
+                        <table class="table table-bordered table-hover">
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                            @foreach (var Roles in Model)
+                            {
+                                <tr>
+                                    <td>@Roles.Id</td>
+                                    <td>@Roles.Name</td>
+
+                                    <td>
+                                        <button type="button" class="btn btn-warning editbtn" data-id="@Roles.Id">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        @* <button type="button" class="btn btn-danger deletebtn" onclick="confirmFunction('@Roles.Id') >
+                                            <i class="fas fa-trash"></i>
+                                        </button> *@
+                                        <button type="button" class="btn btn-danger deletebtn" onclick="confirmFunction('@Roles.Id')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+
                 </div>
                 <!-- /.card -->
             </div>
-            <!-- /.col -->   
+            <!-- /.col -->
         </div>
         <!-- /.row -->
     </div>
@@ -76,26 +77,26 @@
 
             $(".deletebtn").click(function () {
 
-            $.ajax({
-                url: "@Url.Action("DeleteRole", "Home")",
-                dataType: "json",
-                data: { id: $(this).attr("data-id") },
-                success: function (resp) {
+                $.ajax({
+                    url: "@Url.Action("DeleteRole", "Home")",
+                    dataType: "json",
+                    data: { id: $(this).attr("data-id") },
+                    success: function (resp) {
 
-                    if (resp.status) {
-                        location.reload();
+                        if (resp.status) {
+                            location.reload();
 
+                        }
+                        else {
+                            alert("Role is not delete");
+                        }
+                    },
+                    error: function (resp) {
+                        console.log("Delete Role error:", resp);
                     }
-                    else {
-                        alert("Role is not delete");
-                    }
-                },
-                error: function (resp) {
-                    console.log("Delete Role error:", resp);
-                }
-            });
+                });
+            })
         })
-     })
     </script>
-    }
+}
 

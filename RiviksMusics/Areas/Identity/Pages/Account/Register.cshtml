@@ -3,61 +3,65 @@
 @{
     ViewData["Title"] = "Register";
 }
-
 <br />
 <br />
 <br />
 <br />
 <center>
     <div class="register-box">
-
         <div class="register-logo">
-           <b>RiviksMusics</b>
+            <b>Stanford</b>Hospital<i class='fas fa-hospital' style='font-size:48px;color:red'></i>
         </div>
-
         <div class="card">
             <div class="card-body register-card-body">
-                <p class="login-box-msg">Register a new membership</p>
-
                 <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <h2>Create a new account.</h2>
                     <hr />
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="input-group mb-3">
-                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter Email"/>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter Your Email" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
                             </div>
                         </div>
                     </div>
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
                     <div class="input-group mb-3">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Password" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your New Password" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>
                             </div>
                         </div>
                     </div>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
                     <div class="input-group mb-3">
-                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Confirm Password" />
-                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your Confirm Password" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-key"></span>
                             </div>
                         </div>
                     </div>
-                    <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                    <button id="registerSubmit" type="submit" class="w-100 btn btn-primary">Register</button>
+                    <div>
+                        <br />
+                        <p>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                        </p>
+                        <p>
+                            <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Login as a User</a>
+                        </p>
+                        <p>
+                            <a hidden="true" id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                        </p>
+                    </div>
                 </form>
-
             </div>
             <div class="col-md-6 col-md-offset-2">
                 <section>
-
-                  
                     @{
                         if ((Model.ExternalLogins?.Count ?? 0) == 0)
                         {
@@ -84,9 +88,7 @@
         @section Scripts {
             <partial name="_ValidationScriptsPartial" />
         }
-
-
-        
     </div>
+
 
 </center>
