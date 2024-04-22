@@ -3,13 +3,17 @@
 @{
     ViewData["Title"] = "EditProfile";
     Layout = "~/Views/Shared/_Layout.cshtml";
+   
 }
 
+<a href="/Identity/Account/Manage/ChangePassword"  class="btn btn-primary btn-lg float-right" >Change Password</a>
 <h1>Edit Profile</h1>
+<hr/>
 
-<hr />
 <div class="row">
+    
     <div class="col-md-12">
+        
         <form method="post" asp-action="UpdateProfile" class="row g-3" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
