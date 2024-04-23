@@ -2,9 +2,9 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Role page";
 }
-<h1> Role page</h1>
+<h1> Role </h1>
 
 <!-- Main content -->
 <section class="content">
@@ -20,7 +20,7 @@
                         <table class="table table-bordered table-hover">
                             <tr>
                                 <th>Id</th>
-                                <th>Name</th>
+                                <th>RoleName</th>
                                 <th>Action</th>
                             </tr>
                             @foreach (var Roles in Model)
@@ -88,7 +88,7 @@
 
                         }
                         else {
-                            alert("Role is not delete");
+                            alert("Role is delete");
                         }
                     },
                     error: function (resp) {

@@ -8,7 +8,7 @@
 <h1>User</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
 <table class="table" id="dataTable">
     <thead>
@@ -66,8 +66,8 @@
                     @Html.DisplayFor(modelItem => item.Gender)
                 </td>
                 <td>
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                    <button type="button" class="btn btn-danger" onclick="confirmFunction('@item.Id')">Delete</button>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id"><i class="fas fa-edit"></i></a>
+                    <button  class="btn btn-danger" onclick="confirmFunction('@item.Id')"><i class="fas fa-trash"></i></button>
                 </td>
             </tr>
         }

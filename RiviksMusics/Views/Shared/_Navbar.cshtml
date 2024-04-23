@@ -1,7 +1,8 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
 @{
+    var fullName = @UserManager.GetUserAsync(User).Result.FirstName + " " + @UserManager.GetUserAsync(User).Result.LastName;
+    var userImg = @UserManager.GetUserAsync(User).Result.Image;
 }
 
 <!-- Navbar -->
@@ -11,13 +12,13 @@
         <li class="nav-item">
             <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
-       
+
     </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <!-- Navbar Search -->
-        <li class="nav-item">
+       @*  <li class="nav-item">
             <a class="nav-link" data-widget="navbar-search" href="#" role="button">
                 <i class="fas fa-search"></i>
             </a>
@@ -36,32 +37,37 @@
                     </div>
                 </form>
             </div>
-        </li>
+        </li> *@
 
         <!-- Messages Dropdown Menu -->
-         <li class="nav-item dropdown">
+        <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="fa fa-cog" aria-hidden="true"></i>
-                
+                @if (!string.IsNullOrWhiteSpace(userImg))
+                {
+                    <img src="~/img/@userImg" class="img-circle" alt="Image" width="40px" style="border-radius:10em;" />
+                }
+                else
+                {
+                    <img src="~/img/AdminLTELogo.png" class="img-circle" alt="Image" width="40px" style="border-radius:10em;" />
+                }
+                @fullName
             </a>
+            <a asp-controller="User" asp-action="EditProfile" class="dropdown-item @ViewBag.isusereditprofile"></a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                
-                <a href="#" class="dropdown-item">
+                <a asp-action="EditProfile" asp-controller="User" class="dropdown-item">
                     <!-- Message Start -->
-                     <div class="media">
-                        
+                    <div class="media">
                         <div class="media-body">
-                            <h1 class="dropdown-item-title">
-                                
+                            <h3 class="dropdown-item-title">
                                 Edit Profile
-                                <span class="float-right text-sm text-danger"><i class=" fas fa-user-edit "></i></span>
-                            </h1>
+                                <span class="float-right text-sm text-danger"><i class="fas fa-user-edit"></i></span>
+                            </h3>
                         </div>
-                    </div> 
+                    </div>
                     <!-- Message End -->
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
+                <a href="~/Identity/Account/Manage/ChangePassword" class="dropdown-item">
                     <!-- Message Start -->
                     <div class="media">
                         <div class="media-body">
@@ -74,59 +80,68 @@
                     <!-- Message End -->
                 </a>
                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <!-- Message Start -->
-                     <div class="media">
-                        <div class="media-body">
-                            <h3 class="dropdown-item-title">
-                                Logout
-                                <span class="float-right text-sm text-warning"><i class="fas fa-sign-out-alt"></i></span>
-                            </h3>
-                        </div>
-                    </div> 
-                    <!-- Message End -->
-                </a>
-                 <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-            </div> 
-        </li> 
+                @* <a asp-area="Identity" asp-page="/Account/Login" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" class="dropdown-item">
+                <!-- Message Start -->
+                <div class="media">
+                <div class="media-body">
+                <h3 class="dropdown-item-title">
+                Logout
+
+                </h3>
+                </div>
+                </div>
+                <!-- Message End -->
+                </a> *@
+
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-no-border " style="color:black">
+                        Logout
+                        <span style="margin-left: 175px;">
+                            <i class='fas fa-sign-out-alt'></i>
+                        </span>
+                    </button>
+                </form>
+            </div>
+
+
+        </li>
         <!-- Notifications Dropdown Menu -->
         @*  <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-bell"></i>
-                <span class="badge badge-warning navbar-badge">15</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                <span class="dropdown-item dropdown-header">15 Notifications</span>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-envelope mr-2"></i> 4 new messages
-                    <span class="float-right text-muted text-sm">3 mins</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-users mr-2"></i> 8 friend requests
-                    <span class="float-right text-muted text-sm">12 hours</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-file mr-2"></i> 3 new reports
-                    <span class="float-right text-muted text-sm">2 days</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-            </div>
-        </li>  
-         <li class="nav-item">
-            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
-                <i class="fas fa-expand-arrows-alt"></i>
-            </a>
-        </li> 
-         <li class="nav-item">
-            <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                <i class="fas fa-th-large"></i>
-            </a>
-        </li> *@ 
+        <a class="nav-link" data-toggle="dropdown" href="#">
+        <i class="far fa-bell"></i>
+        <span class="badge badge-warning navbar-badge">15</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+        <span class="dropdown-item dropdown-header">15 Notifications</span>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+        <i class="fas fa-envelope mr-2"></i> 4 new messages
+        <span class="float-right text-muted text-sm">3 mins</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+        <i class="fas fa-users mr-2"></i> 8 friend requests
+        <span class="float-right text-muted text-sm">12 hours</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item">
+        <i class="fas fa-file mr-2"></i> 3 new reports
+        <span class="float-right text-muted text-sm">2 days</span>
+        </a>
+        <div class="dropdown-divider"></div>
+        <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+        <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+        </li>
+        <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+        <i class="fas fa-th-large"></i>
+        </a>
+        </li> *@
     </ul>
 </nav>
 <!-- /.navbar -->
