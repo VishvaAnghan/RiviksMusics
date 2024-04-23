@@ -3,6 +3,8 @@
 *@
 @{
     ViewData["Title"] = "Role page";
+    int i = 1;
+
 }
 <h1> Role </h1>
 
@@ -20,29 +22,28 @@
                         <table class="table table-bordered table-hover">
                             <tr>
                                 <th>Id</th>
-                                <th>RoleName</th>
+                                <th>Role Name</th>
                                 <th>Action</th>
                             </tr>
                             @foreach (var Roles in Model)
                             {
                                 <tr>
-                                    <td>@Roles.Id</td>
+                                    <td>@(i++)</td>
                                     <td>@Roles.Name</td>
 
                                     <td>
-                                        <button type="button" class="btn btn-warning editbtn" data-id="@Roles.Id">
+                                        <button type="button" class="btn btn-warning editbtn " data-id="@Roles.Id">
                                             <i class="fas fa-edit"></i>
                                         </button>
                                         @* <button type="button" class="btn btn-danger deletebtn" onclick="confirmFunction('@Roles.Id') >
                                             <i class="fas fa-trash"></i>
                                         </button> *@
-                                        <button type="button" class="btn btn-danger deletebtn" onclick="confirmFunction('@Roles.Id')"><i class="fas fa-trash"></i></button>
+                                        <button type="button" class="btn btn-danger deletebtn" data-id="@Roles.Id"><i class="fas fa-trash"></i></button>
                                     </td>
                                 </tr>
                             }
                         </table>
                     </div>
-
                 </div>
                 <!-- /.card -->
             </div>
@@ -57,7 +58,7 @@
     <script>
         $(document).ready(function () {
             $(".editbtn").click(function () {
-
+                $("#exampleModalLabel").text("Edit Role");
 
                 $.ajax({
                     url: "@Url.Action("GetRoleById", "Home")",
@@ -76,26 +77,26 @@
             })
 
             $(".deletebtn").click(function () {
-
-                $.ajax({
-                    url: "@Url.Action("DeleteRole", "Home")",
-                    dataType: "json",
-                    data: { id: $(this).attr("data-id") },
-                    success: function (resp) {
-
-                        if (resp.status) {
-                            location.reload();
-
+                if (confirm("Are you sure you want to delete this role?")) {
+                    $.ajax({
+                        url: "@Url.Action("DeleteRole", "Home")",
+                        datatype: "json",
+                        data: { id: $(this).attr("data-id") },
+                        success: function (resp) {
+                            if (resp.status) {
+                                location.reload();
+                            } else {
+                                alert("Role is not deleted");
+                            }
+                        },
+                        error: function (resp) {
+                            console.log("Delete Role error:", resp);
                         }
-                        else {
-                            alert("Role is delete");
-                        }
-                    },
-                    error: function (resp) {
-                        console.log("Delete Role error:", resp);
-                    }
-                });
-            })
+                    });
+                } else {
+                    return false;
+                }
+            });
         })
     </script>
 }
