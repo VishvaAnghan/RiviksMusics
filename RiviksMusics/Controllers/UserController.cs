@@ -130,6 +130,7 @@ namespace RiviksMusics.Controllers
 
         }
         public IActionResult EditUser(User user)
+
         {
             if (ModelState.IsValid)
             {
