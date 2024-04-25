@@ -8,7 +8,7 @@
 <h1>Edit User</h1>
 
 <div>
-    <a  class="btn btn-primary" asp-action="User">Back to List</a>
+    <a class="btn btn-primary" asp-action="User">Back to List</a>
 </div>
 <hr />
 
@@ -45,10 +45,10 @@
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd") />
+                <input asp-for="BirthDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")  />
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
-            <div class="form-group col-md-12">
+            <div class="form-group col-md-6">
                 <label>Gender</label>
                 <div class="form-check">
                     <input asp-for="Gender" class="form-check-input" type="radio" value="male">
@@ -64,9 +64,15 @@
                 </div>
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
-
+            <div class="form-group col-md-6">
+                <label asp-for="Role" class="control-label"></label>
+                <select asp-for="Role" class="form-control selectrole">
+                </select>
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
             <div class="form-group col-md-12">
-                <button type="submit" class="btn btn-primary" >save</button>
+                <button type="submit" class="btn btn-primary">save</button>
+                <input type="hidden" id="RoleName" value="@Model.Role" />
             </div>
         </form>
     </div>
@@ -75,5 +81,32 @@
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            function getRoles() {
+                $.ajax({
+                    url: "@Url.Action("RoleAction", "User")",
+                    type: "GET",
+                    dataType: "Json",
+                    success: function (result) {
+                        var mySelect = $('.selectrole');
+                        $.each(result, function (idx, item) {
+
+                            mySelect.append(
+                                $('<option' + (($("#RoleName").val() == item.text) ? ' selected' : '') + '></option>').val(item.text).html(item.text)
+                            );
+                        });
+                    },
+                    error: function () {
+                        alert('Failed to retrieve Sub Departments.');
+                    }
+                });
+            }
+
+            getRoles();
+        })
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

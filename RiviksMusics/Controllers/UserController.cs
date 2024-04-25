@@ -1,13 +1,10 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting.Internal;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
-using System.Net;
 
 namespace RiviksMusics.Controllers
 {
@@ -17,14 +14,19 @@ namespace RiviksMusics.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-        public UserController(ILogger<HomeController> logger, ApplicationDbContext context , UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment)
+        public UserController(ILogger<HomeController> logger, ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _roleManager = roleManager;
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -46,7 +48,8 @@ namespace RiviksMusics.Controllers
                 PhoneNo = u.PhoneNo,
                 Address = u.Address,
                 BirthDate = u.BirthDate,
-                Gender = u.Gender
+                Gender = u.Gender,
+                Role = u.Role
 
             }).ToList();
             return View(model);
@@ -69,7 +72,7 @@ namespace RiviksMusics.Controllers
         {
             return View("AddUser", user);
         }
-        public IActionResult AddUser(User user)
+        public async Task<IActionResult> AddUser(User user)
         {
             if (ModelState.IsValid)
             {
@@ -81,13 +84,16 @@ namespace RiviksMusics.Controllers
                     PhoneNo = user.PhoneNo,
                     Address = user.Address,
                     BirthDate = user.BirthDate,
-                    Gender = user.Gender
+                    Gender = user.Gender,
+                    Role = user.Role,
+                    EmailConfirmed = true,
+                    UserName = Guid.NewGuid().ToString().Replace('-', 'a'),
                 };
 
                 if (!string.IsNullOrEmpty(user.Id))
                 {
                     //Edit
-                    var User = _context.Users.Find(user.Id);
+                    var User = await _context.Users.FindAsync(user.Id);
                     if (User != null)
                     {
                         User.FirstName = user.FirstName;
@@ -97,7 +103,8 @@ namespace RiviksMusics.Controllers
                         User.Address = user.Address;
                         User.BirthDate = user.BirthDate;
                         User.Gender = user.Gender;
-                        _context.SaveChanges();
+                        User.Role = user.Role;
+                        await _context.SaveChangesAsync();
 
                     }
                 }
@@ -105,31 +112,52 @@ namespace RiviksMusics.Controllers
                 {
                     //Create
                     _context.Users.Add(applicationUser);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
+
+                    var roleResult = await _userManager.AddToRoleAsync(applicationUser, user.Role);
+                    if (roleResult.Succeeded)
+                    {
+                        return RedirectToAction("User");
+                    }
                 }
-                return RedirectToAction("User");
             }
-            return View("AddUser", user);
+ 
+            return View("AddUser",user);
 
         }
-        public IActionResult Edit(User user)
+        public async Task<IActionResult> Edit(User user)
         {
-            var getUser = _context.Users.Where(x => x.Id == user.Id)
+            var getUser = await _context.Users.Where(x => x.Id == user.Id)
                 .Select(x => new User
                 {
+                    Id = x.Id,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     Email = x.Email,
                     PhoneNo = x.PhoneNo,
                     Address = x.Address,
                     BirthDate = x.BirthDate,
-                    Gender = x.Gender
-                }).FirstOrDefault();
+                    Gender = x.Gender,
+                }).FirstOrDefaultAsync();
+
+            if (getUser != null)
+            {
+                var appplicationUser = await _userManager.FindByIdAsync(getUser.Id);
+                var userRoles = await _userManager.GetRolesAsync(appplicationUser);
+                if (userRoles.Count() > 0)
+                {
+                    var role = await _context.Roles.FirstOrDefaultAsync(x => x.Name == userRoles[0]);
+                    if (role != null)
+                    {
+                        getUser.Role = role.Name;
+                    }
+                }
+            }
             return View("EditUser", getUser);
 
 
         }
-        public IActionResult EditUser(User user)
+        public async Task<IActionResult> EditUser(User user)
         {
             if (ModelState.IsValid)
             {
@@ -143,8 +171,23 @@ namespace RiviksMusics.Controllers
                     applicationUser.Address = user.Address;
                     applicationUser.BirthDate = user.BirthDate;
                     applicationUser.Gender = user.Gender;
+                    applicationUser.Role = user.Role;
+
                     _context.Users.Update(applicationUser);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
+
+
+                    var userRoles = await _userManager.GetRolesAsync(applicationUser);
+                    var removeRoleResult = await _userManager.RemoveFromRolesAsync(applicationUser, userRoles);
+                    if (removeRoleResult != null)
+                    {
+                        var roleResult = await _userManager.AddToRoleAsync(applicationUser, user.Role);
+                        if (roleResult.Succeeded)
+                        {
+                            return RedirectToAction("User");
+                        }
+                    }
+
                     return RedirectToAction("User");
                 }
                 else
@@ -193,7 +236,6 @@ namespace RiviksMusics.Controllers
 
             return View("EditProfile", applicationUser);
         }
-
         [HttpPost]
         public async Task<IActionResult> UpdateProfile(ApplicationUser user , IFormFile? ImageFile)
         {
@@ -208,7 +250,7 @@ namespace RiviksMusics.Controllers
                     updateUser.Address = user.Address;
                     updateUser.BirthDate = user.BirthDate;
                     updateUser.Gender = user.Gender;
-                    /*updateUser.Image = user.Image;*/
+                    
 
                     if (ImageFile != null && ImageFile.Length > 0)
                     {
@@ -232,5 +274,16 @@ namespace RiviksMusics.Controllers
 
             return View("EditProfile", user);
         }
+
+        public IActionResult RoleAction()
+        {
+            var roles = _context.Roles
+                        .Select(r => new SelectListItem { Value = r.Id, Text = r.Name })
+                        .ToList();
+
+            return Json(roles);
+        }
+
+     
     }
 }

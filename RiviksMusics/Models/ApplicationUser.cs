@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace RiviksMusics.Models
 {
     public class ApplicationUser : IdentityUser
-    {
+    { 
         [Display(Name = "First Name")]
         public string? FirstName { get; set; }
         [Display(Name = "Last Name")]
@@ -16,6 +16,7 @@ namespace RiviksMusics.Models
         [Display(Name = "Birth Date")]
         public DateTime BirthDate { get; set; }
         public string? Gender { get; set; }
+        public string? Role { get; set; }
         public string? Image { get; set; }
 
     }

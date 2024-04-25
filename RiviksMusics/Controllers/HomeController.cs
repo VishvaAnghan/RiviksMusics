@@ -13,11 +13,13 @@ namespace RiviksMusics.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
-        
-        public HomeController(ILogger<HomeController> logger , ApplicationDbContext context)
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public HomeController(ILogger<HomeController> logger , ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
         {
             _logger = logger;
             _context = context;
+            _roleManager = roleManager;
         }
 
         public IActionResult Index()
@@ -38,27 +40,30 @@ namespace RiviksMusics.Controllers
              return View (model);
         }
 
-        public IActionResult InsertRole(Roles roleName)
+        public async Task<IActionResult> InsertRole(Roles roleName)
         {
            if(ModelState.IsValid)
             {
-                var identityRole = new IdentityRole
-                {
-                    Name = roleName.Name
-                };
-
                 if(!string.IsNullOrEmpty(roleName.Id))
                 {
                     //Edit
                     var role = _context.Roles.Find(roleName.Id);
                     role.Name = roleName.Name;
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
                     //Create
-                    _context.Roles.Add(identityRole);
-                    _context.SaveChanges();
+
+                    var identityRole = new IdentityRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = roleName.Name
+                    };
+
+                    var result = await _roleManager.CreateAsync(identityRole);
+                    //_context.Roles.Add(identityRole);
+                    //_context.SaveChanges();
                 }
                 return RedirectToAction("Role");
             }
