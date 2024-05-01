@@ -27,6 +27,8 @@ namespace RiviksMusics.Controllers
             ViewBag.isdashbord = "active";
             return View();
         }
+
+        [Authorize(Roles = "Admin")]
         public IActionResult Role(List<Roles>roles)
         {
             ViewBag.isrole = "active";
