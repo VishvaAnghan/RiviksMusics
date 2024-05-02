@@ -8,7 +8,6 @@ using System.Diagnostics;
 
 namespace RiviksMusics.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -42,6 +41,7 @@ namespace RiviksMusics.Controllers
              return View (model);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> InsertRole(Roles roleName)
         {
            if(ModelState.IsValid)
@@ -73,7 +73,7 @@ namespace RiviksMusics.Controllers
             //return RedirectToAction("Role");
         }
 
-
+        [Authorize(Roles = "Admin")]
         public IActionResult EditRole(Roles roleName)
         {
             if (ModelState.IsValid)
@@ -95,7 +95,7 @@ namespace RiviksMusics.Controllers
             //return RedirectToAction("Role");
         }
 
-
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteRole(string id)
         {
            
