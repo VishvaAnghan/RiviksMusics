@@ -49,7 +49,6 @@ namespace RiviksMusics.Controllers
             {
                 var Category = new Category
                 {
-                    //CategoryId = category.CategoryId,
                     CategoryName = category.CategoryName,
                     Description = category.Description
                 };
