@@ -37,10 +37,19 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+
+                <li class="nav-item ">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Go to Webiste
+                        </p>
+                    </a>
+                </li>
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
                 <li class="nav-item ">
-                    <a asp-controller="Home" asp-action="Index" class="nav-link @ViewBag.isdashbord">
+                    <a asp-controller="Dashboard" asp-action="Index" class="nav-link @ViewBag.isdashbord">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard
@@ -75,6 +84,15 @@
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                             Category
+
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Album" asp-action="Index" class="nav-link  @ViewBag.isalbum">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Album
 
                         </p>
                     </a>

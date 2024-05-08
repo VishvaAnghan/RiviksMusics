@@ -23,9 +23,37 @@ namespace RiviksMusics.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.isdashbord = "active";
             return View();
         }
+
+        public IActionResult Albums()
+        {
+            //ViewBag.isalbums = "active";
+            return View();
+        }
+
+        public IActionResult Events()
+        {
+            
+            return View();
+        }
+        public IActionResult News()
+        {
+
+            return View();
+        }
+        public IActionResult Contact()
+        {
+
+            return View();
+        }
+       /* public IActionResult Elements()
+        {
+
+            return View();
+        }*/
+
+        #region Role
 
         [Authorize(Roles = "Admin")]
         public IActionResult Role(List<Roles>roles)
@@ -118,7 +146,7 @@ namespace RiviksMusics.Controllers
             var role = _context.Roles.Find(id);
             return Json(role);
         }
-
+        #endregion
 
         public IActionResult Privacy()
         {
@@ -130,5 +158,6 @@ namespace RiviksMusics.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

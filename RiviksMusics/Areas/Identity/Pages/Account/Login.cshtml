@@ -3,76 +3,80 @@
 
 @{
     // ViewData["Title"] = "Log in";
-
-}
-body{
-    bac
+     Layout = "~/Views/Shared/_MusicLayout.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
-<center>
-    <br/>
-    <br />
-    <br />
-<div class="login-box">
-    <div class="login-logo">
-        <b>RiviksMusics</b>
-    </div>
-    <!-- /.login-logo -->
-    <div class="card">
-        <div class="card-body login-card-body">
 
-                <form id="account" method="post">
-                    <h2>Login</h2>
-                    <hr />
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="input-group mb-3">
-                        <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email" />
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-group mb-3">
-                        <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password" />
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="checkbox">
-                            <label asp-for="Input.RememberMe" class="form-label">
-                                <input class="form-check-input" asp-for="Input.RememberMe" />
-                                @Html.DisplayNameFor(m => m.Input.RememberMe)
-                            </label>
-                        </div>
-                    </div>
-                    <br/>
-                    <div>
-                        <button id="login-submit" type="submit" class="w-100 btn  btn-primary">Login</button>
-                    </div>
-                    <div>
-                        <br/>
-                        <p>
-                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                        </p>
-                        <p>
-                            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                        </p>
-                        @* <p>
-                            <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                        </p> *@
-                    </div>
-                </form>
+  
 
+  
+    <!-- ##### Breadcumb Area Start ##### -->
+    <section class="breadcumb-area bg-img bg-overlay" style="background-image: url(../../FrontEnd/img/bg-img/breadcumb3.jpg);">
+        <div class="bradcumbContent">
+            <p></p>
+            <h2>Login</h2>
         </div>
-        <!-- /.login-card-body -->
-    </div>
-</div>
-<!-- /.login-box -->
-</center>
+    </section>
+    <!-- ##### Breadcumb Area End ##### -->
+    <!-- ##### Login Area Start ##### -->
+    <section class="login-area section-padding-100">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8">
+                    <div class="login-content">
+                        <h3>Welcome Back</h3>
+                        <!-- Login Form -->
+                        <div class="login-form login-card-body" >
+                            <form id="account" method="post">
+                                <hr/>
+                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                <div class="input-group mb-3">
+                                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Email" />
+                                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                                </div>
+                                <div>
+                                    <div class="checkbox">
+                                        <label asp-for="Input.RememberMe" class="form-label">
+                                            <input class="form-check-input" asp-for="Input.RememberMe" />
+                                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                        </label>
+                                    </div>
+                                </div>
+                               
+                                <div>
+                                    <button type="submit" class="btn oneMusic-btn mt-30">Login</button>
+                                </div>
+                                <div>
+                                    <br />
+                                    <p>
+                                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                                    </p>
+                                    <p>
+                                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                    </p>
+                                    @* <p>
+                                    <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                    </p> *@
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ##### Login Area End ##### -->
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+          
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+}

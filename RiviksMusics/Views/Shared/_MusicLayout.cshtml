@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -17,21 +20,19 @@
 </head>
 
 <body>
-    
-
     <!-- ##### Header Area Start ##### -->
     <header class="header-area">
         <!-- Navbar Area -->
         <div class="oneMusic-main-menu">
             <div class="classy-nav-container breakpoint-off">
                 <div class="container">
-                        
+
                     <!-- Menu -->
                     <nav class="classy-navbar justify-content-between" id="oneMusicNav">
 
                         <!-- Nav brand -->
-                        <a href="~/FrontEnd/index.html" class="nav-brand"><img src="~/FrontEnd/img/core-img/logo.png" alt=""></a>
-                           
+                        <a asp-action="Index" asp-controller="Home" class="nav-brand" style="color:aliceblue">RiviksMusics</a>
+
 
                         <!-- Navbar Toggler -->
                         <div class="classy-navbar-toggler">
@@ -45,23 +46,22 @@
                             <div class="classycloseIcon">
                                 <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
                             </div>
-                               
+
                             <!-- Nav Start -->
                             <div class="classynav">
                                 <ul>
-                                    <li><a href="~/FrontEnd/index.html">Home</a></li>
-                                    <li><a href="~/FrontEnd/albums-store.html">Albums</a></li>
+                                    <li><a asp-action="Albums" asp-controller="Home" class="@ViewBag.isalbums">Albums</a></li>
                                     <li>
                                         <a href="#">Pages</a>
                                         <ul class="dropdown">
-                                            <li><a href="~/FrontEnd/index.html">Home</a></li>
-                                            <li><a href="~/FrontEnd/albums-store.html">Albums</a></li>
-                                            <li><a href="~/FrontEnd/event.html">Events</a></li>
-                                            <li><a href="~/FrontEnd/blog.html">News</a></li>
-                                            <li><a href="~/FrontEnd/contact.html">Contact</a></li>
-                                            <li><a href="~/FrontEnd/elements.html">Elements</a></li>
-                                            <li><a href="~/FrontEnd/login.html">Login</a></li>
-                                            <li>
+                                            <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                                            <li><a asp-action="Albums" asp-controller="Home">Albums</a></li>
+                                           @*  <li><a asp-action="Events" asp-controller="Home">Events</a></li>
+                                            <li><a asp-action="News" asp-controller="Home">News</a></li> *@
+                                            <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
+                                            @* <li><a asp-action="Elements" asp-controller="Home">Elements</a></li> *@
+                                            
+                                            @* <li>
                                                 <a href="#">Dropdown</a>
                                                 <ul class="dropdown">
                                                     <li><a href="#">Even Dropdown</a></li>
@@ -79,24 +79,31 @@
                                                     </li>
                                                     <li><a href="#">Even Dropdown</a></li>
                                                 </ul>
-                                            </li>
+                                            </li> *@
                                         </ul>
                                     </li>
-                                        <li><a href="~/FrontEnd/event.html">Events</a></li>
-                                        <li><a href="~/FrontEnd/blog.html">News</a></li>
-                                        <li><a href="~/FrontEnd/contact.html">Contact</a></li>
+                                   @*  <li><a asp-action="Events" asp-controller="Home">Events</a></li>
+                                    <li><a asp-action="News" asp-controller="Home">News</a></li> *@
+                                    <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                                 </ul>
 
                                 <!-- Login/Register & Cart Button -->
                                 <div class="login-register-cart-button d-flex align-items-center">
-                                    <!-- Login/Register -->
                                     <div class="login-register-btn mr-50">
-                                            <a href="~/FrontEnd/login.html" id="loginBtn">Login / Register</a>
-                                    </div>
-                                    
-                                    <!-- Cart Button -->
-                                    <div class="cart-btn">
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        <a asp-action="Index" asp-controller="Dashboard">Home</a>
+                                    } 
+                                    else
+                                    {
+                                        <!-- Login/Register -->
+                                        <a asp-area="Identity" asp-page="/Account/Login" id="loginBtn">Login / Register</a>
+
+                                        <!-- Cart Button -->
+                                        @* <div class="cart-btn">
                                         <p><span class="icon-shopping-cart"></span> <span class="quantity">1</span></p>
+                                        </div> *@
+                                    }
                                     </div>
                                 </div>
                             </div>
@@ -110,29 +117,32 @@
     </header>
     <!-- ##### Header Area End ##### -->
     <div>
-    @RenderBody()
-        </div>
+        @RenderBody()
+    </div>
     <footer class="footer-area">
         <div class="container">
             <div class="row d-flex flex-wrap align-items-center">
                 <div class="col-12 col-md-6">
-                        <a href="#"><img src="~/FrontEnd/img/core-img/logo.png" alt=""></a>
+                    <a asp-action="Index" asp-controller="Home" class="nav-brand" style="color:thistle">R i v i k s M u s i c s</a>
                     <p class="copywrite-text">
                         <a href="#">
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with 
+                            <i class="fa fa-heart-o" aria-hidden="true"></i> by 
+                            <a href="https://colorlib.com" target="_blank">Colorlib</a>
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                        </a>
                     </p>
                 </div>
-                    
+
                 <div class="col-12 col-md-6">
                     <div class="footer-nav">
                         <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">Albums</a></li>
-                            <li><a href="#">Events</a></li>
-                            <li><a href="#">News</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a asp-action="Index" asp-controller="Home">Home</a></li>
+                            <li><a asp-action="Albums" asp-controller="Home">Albums</a></li>
+                           @*  <li><a asp-action="Events" asp-controller="Home">Events</a></li> 
+                            <li><a asp-action="News" asp-controller="Home">News</a></li> *@
+                            <li><a asp-action="Contact" asp-controller="Home">Contact</a></li>
                         </ul>
                     </div>
                 </div>
@@ -151,6 +161,8 @@
     <script src="~/FrontEnd/js/plugins/plugins.js"></script>
     <!-- Active js -->
     <script src="~/FrontEnd/js/active.js"></script>
+
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>
