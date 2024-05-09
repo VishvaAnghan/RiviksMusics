@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RiviksMusics.Controllers
 {
@@ -29,41 +30,39 @@ namespace RiviksMusics.Controllers
             {
                 AlbumId = m.AlbumId,
                 AlbumName = m.AlbumName,
-                User = m.User,
-                //CategoryId = m.CategoryId,
+                User = m.User,               
                 Category = m.Category,
                 UploadDate = m.UploadDate,
-                AlbumImage = m.AlbumImage
-                //AlbumUpload = m.AlbumUpload
+                AlbumImage = m.AlbumImage               
             }).ToList();
-            return View("Album",model);
+            return View("Album", model);
         }
 
         public IActionResult Create(Album albums)
         {
             ViewBag.isalbum = "active";
-            var artists = _context.Users.Where(u => u.Role == "artist")
-                   .Select(u => new
-                   {
-                       Id= u.Id,
-                       FullName = $"{u.FirstName} {u.LastName}"
-                   })
-                   .ToList();
-            ViewBag.Artists = new SelectList(artists, "Id", "FullName");
-            var categories = _context.Category.Select(c => new
-            {
-                c.CategoryId,
-                CategoryName = $"{c.CategoryName}"
-            }).ToList();
-            ViewBag.Categories = new SelectList(categories, "CategoryId", "CategoryName");
-           // ViewBag.Id = new SelectList(_context.User, "Id", "UserName");
-           // ViewBag.Category = new SelectList(_context.Category, "CategoryId", "CategoryName");
+            //var artists = _context.Users.Where(u => u.Role == "artist")
+            //       .Select(u => new
+            //       {
+            //           Id = u.Id,
+            //           FullName = $"{u.FirstName} {u.LastName}"
+            //       })
+            //       .ToList();
+            //ViewBag.Artists = new SelectList(artists, "Id", "FullName");
+            //var categories = _context.Category.Select(c => new
+            //{
+            //    c.CategoryId,
+            //    CategoryName = $"{c.CategoryName}"
+            //}).ToList();
+            //ViewBag.Categories = new SelectList(categories, "CategoryId", "CategoryName");
+            // ViewBag.Id = new SelectList(_context.User, "Id", "UserName");
+            // ViewBag.Category = new SelectList(_context.Category, "CategoryId", "CategoryName");
             return View("AddAlbum", albums);
         }
-       
+
         public IActionResult AddAlbum(Album album)
         {
-           
+
             if (ModelState.IsValid)
             {
                 var Album = new Album
@@ -73,7 +72,6 @@ namespace RiviksMusics.Controllers
                     CategoryId = album.CategoryId,
                     UploadDate = album.UploadDate,
                     AlbumImage = album.AlbumImage
-                    //AlbumUpload = album.AlbumUpload
                 };
 
                 if (album.AlbumId != 0)
@@ -82,13 +80,12 @@ namespace RiviksMusics.Controllers
                     var albums = _context.Album.Find(album.AlbumId);
                     if (Album != null)
                     {
-                        
+
                         album.AlbumName = album.AlbumName;
                         album.ArtistId = album.ArtistId;
                         album.CategoryId = album.CategoryId;
                         album.UploadDate = album.UploadDate;
                         album.AlbumImage = album.AlbumImage;
-                        //album.AlbumUpload = album.AlbumUpload;
                         _context.SaveChanges();
 
                     }
@@ -108,20 +105,14 @@ namespace RiviksMusics.Controllers
         public IActionResult Edit(int Id)
         {
             ViewBag.isalbum = "active";
-            var artists = _context.Users.Where(u => u.Role == "artist")
-                   .Select(u => new
-                   {
-                       Id = u.Id,
-                       FullName = $"{u.FirstName} {u.LastName}"
-                   })
-                   .ToList();
-            ViewBag.Artists = new SelectList(artists, "Id", "FullName");
-            //var categories = _context.Category.Select(c => new
-            //{
-            //    c.CategoryId,
-            //    CategoryName = $"{c.CategoryName}"
-            //}).ToList();
-            //ViewBag.Categories = new SelectList(categories, "CategoryId", "CategoryName");
+            //var artists = _context.Users.Where(u => u.Role == "artist")
+            //       .Select(u => new
+            //       {
+            //           Id = u.Id,
+            //           FullName = $"{u.FirstName} {u.LastName}"
+            //       })
+            //       .ToList();
+            
             ViewBag.Categories = new SelectList(_context.Category, "CategoryId", "CategoryName");
             var editAlbum = _context.Album.Where(x => x.AlbumId == Id)
                 .Select(x => new Album
@@ -132,8 +123,6 @@ namespace RiviksMusics.Controllers
                     CategoryId = x.CategoryId,
                     UploadDate = x.UploadDate,
                     AlbumImage = x.AlbumImage,
-                    //AlbumUpload = x.AlbumUpload
-
                 }).FirstOrDefault();
             return View("EditAlbum", editAlbum);
         }
@@ -151,7 +140,6 @@ namespace RiviksMusics.Controllers
                     Album.CategoryId = album.CategoryId;
                     Album.UploadDate = album.UploadDate;
                     Album.AlbumImage = album.AlbumImage;
-                    //Album.AlbumUpload = album.AlbumUpload;
                     _context.Album.Update(Album);
                     _context.SaveChanges();
                     return RedirectToAction("Index");
@@ -175,7 +163,6 @@ namespace RiviksMusics.Controllers
                     CategoryId = x.CategoryId,
                     UploadDate = x.UploadDate,
                     AlbumImage = x.AlbumImage
-                    //AlbumUpload = x.AlbumUpload
                 }).FirstOrDefault();
             return View("DeleteAlbum", deleteAlbum);
         }
@@ -191,6 +178,29 @@ namespace RiviksMusics.Controllers
                 return Json(new { Status = true });
             }
             return Json(new { Status = false });
+        }
+
+        public IActionResult ArtistRole()
+        {
+            var artists = _context.Users.Where(u => u.Role == "artist")
+                 .Select(u => new
+                 {
+                     Id = u.Id,
+                     FullName = $"{u.FirstName} {u.LastName}"
+                 })
+                 .ToList();
+
+            return Json(artists);
+        }
+        public IActionResult CategoryRole()
+        {
+            var categories = _context.Category.Select(c => new
+            {
+                c.CategoryId,
+                CategoryName = $"{c.CategoryName}"
+            }).ToList();
+            return Json(categories);
+
         }
     }
 }

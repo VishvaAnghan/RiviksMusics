@@ -30,12 +30,7 @@ namespace RiviksMusics.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult User(List<User> User)
+        public IActionResult Index(List<User> User)
         {
             ViewBag.isuser = "active";
             var model = new List<User>();
@@ -52,7 +47,7 @@ namespace RiviksMusics.Controllers
                 Role = u.Role
 
             }).ToList();
-            return View(model);
+            return View("User", model);
         }
 
         public IActionResult isusereditprofile()
@@ -124,7 +119,7 @@ namespace RiviksMusics.Controllers
                             var roleResult = await _userManager.AddToRoleAsync(applicationUser, user.Role);
                             if (roleResult.Succeeded)
                             {
-                                return RedirectToAction("User");
+                                return RedirectToAction("Index");
                             }
                         }
                     }
@@ -199,11 +194,11 @@ namespace RiviksMusics.Controllers
                         var roleResult = await _userManager.AddToRoleAsync(applicationUser, user.Role);
                         if (roleResult.Succeeded)
                         {
-                            return RedirectToAction("User");
+                            return RedirectToAction("Index");
                         }
                     }
 
-                    return RedirectToAction("User");
+                    return RedirectToAction("Index");
                 }
                 else
                 {
