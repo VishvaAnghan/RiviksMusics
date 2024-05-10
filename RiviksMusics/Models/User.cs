@@ -14,7 +14,7 @@ namespace RiviksMusics.Models
         [Required]
         [EmailAddress]
         public string? Email { get; set; }
-        [Required]
+       
         [Display(Name = "Phone No")]
         [MaxLength(10)]
         public string? PhoneNo { get; set; }
@@ -26,6 +26,7 @@ namespace RiviksMusics.Models
         [Required]
         public string? Gender { get; set; }
         public string? Image { get; set; }
+        [Required]
         public string? Role { get; set; }
         public string? Action { get; set; }
     }

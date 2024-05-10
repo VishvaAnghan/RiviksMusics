@@ -17,13 +17,13 @@ namespace RiviksMusics.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-        public IActionResult Index()
+        /*public IActionResult Index()
 
         {
             return View();
         }
-
-        public IActionResult Category(List<Category> categories)
+*/
+        public IActionResult Index(List<Category> categories)
         {
             ViewBag.iscategory = "active";
             var model = new List<Category>();
@@ -33,18 +33,20 @@ namespace RiviksMusics.Controllers
                 CategoryName = m.CategoryName,
                 Description = m.Description
             }).ToList();
-            return View(model);
+            return View("Category",model);
         }
 
 
 
         public IActionResult Create(Category category)
         {
+            ViewBag.iscategory = "active";
             return View("AddCategory", category);
         }
-
+        [HttpPost]
         public IActionResult AddCategory(Category category)
         {
+            ViewBag.iscategory = "active";
             if (ModelState.IsValid)
             {
                 var Category = new Category
@@ -72,7 +74,7 @@ namespace RiviksMusics.Controllers
                     _context.Category.Add(Category);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("Category");
+                return RedirectToAction("Index");
             }
 
             return View("AddCategory", category);
@@ -80,6 +82,7 @@ namespace RiviksMusics.Controllers
 
         public IActionResult Edit(int Id)
         {
+            ViewBag.iscategory = "active";
             var getCategory = _context.Category.Where(x => x.CategoryId == Id)
                 .Select(x => new Category
                 {
@@ -89,8 +92,10 @@ namespace RiviksMusics.Controllers
                 }).FirstOrDefault();
             return View("EditCategory", getCategory);
         }
+        [HttpPost]
         public IActionResult EditCategory(Category category)
         {
+            ViewBag.iscategory = "active";
             if (ModelState.IsValid)
             {
                 var Category = _context.Category.Find(category.CategoryId);
@@ -100,7 +105,7 @@ namespace RiviksMusics.Controllers
                     Category.CategoryName = category.CategoryName;
                     Category.Description = category.Description;
                     _context.SaveChanges();
-                    return RedirectToAction("Category");
+                    return RedirectToAction("Index");
                 }
                 else
                 {
@@ -108,8 +113,8 @@ namespace RiviksMusics.Controllers
                     return NotFound();
                 }
             }
-            return View("EditCategory", Category);
-            //return RedirectToAction("User");
+            return View("EditCategory", Index);
+            
         }
         public IActionResult Delete(Category category)
         {
@@ -122,7 +127,7 @@ namespace RiviksMusics.Controllers
                 }).FirstOrDefault();
             return View("DeleteCategory", deleteCategory);
         }
-
+        
         public IActionResult DeleteCategory(int CategoryId)
         {
             var category = _context.Category.Find(CategoryId);

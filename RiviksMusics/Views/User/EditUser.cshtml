@@ -8,7 +8,7 @@
 <h1>Edit User</h1>
 
 <div>
-    <a class="btn btn-primary" asp-action="User">Back to List</a>
+    <a class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
 <hr />
 
@@ -19,17 +19,17 @@
             <input type="hidden" asp-for="Id"/>
 
             <div class="form-group col-md-6">
-                <label asp-for="FirstName" class="control-label"></label>
+                <label asp-for="FirstName" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="LastName" class="control-label"></label>
+                <label asp-for="LastName" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="Email" class="control-label"></label>
+                <label asp-for="Email" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
@@ -45,11 +45,11 @@
             </div>
             <div class="form-group col-md-6">
                 <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")  />
+                <input asp-for="BirthDate" class="form-control" type="date" Max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="BirthDate" class="text-danger"></span>
             </div>
             <div class="form-group col-md-6">
-                <label>Gender</label>
+                <label>Gender</label><span class="text-danger">*</span>
                 <div class="form-check">
                     <input asp-for="Gender" class="form-check-input" type="radio" value="male">
                     <label asp-for="Gender" class="form-check-label">
@@ -65,7 +65,7 @@
                 <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
             <div class="form-group col-md-6">
-                <label asp-for="Role" class="control-label"></label>
+                <label asp-for="Role" class="control-label"></label><span class="text-danger">*</span>
                 <select asp-for="Role" class="form-control selectrole">
                 </select>
                 <span asp-validation-for="Role" class="text-danger"></span>

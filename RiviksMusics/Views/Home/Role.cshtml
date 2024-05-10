@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-12">
                 <partial name="RoleForm" />
-                <button type="button" class="btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".bd-example-modal-lg">Add</button><br /><br /><br />
+                <button type="button" class="add-role btn btn-primary btn-lg float-right" data-toggle="modal" data-target=".bd-example-modal-lg">Add</button><br /><br /><br />
 
                 <div class="card">
                     <div class="card-body">
@@ -75,6 +75,13 @@
                     }
                 });
             })
+
+            $(".add-role").click(function () {
+                $("#exampleModelLabel").text(" Add Role");
+                $("#roleId").val("");
+                $("#Name").val("");
+                $("#roleModel").modal('show');
+            });
 
             $(".deletebtn").click(function () {
                 if (confirm("Are you sure you want to delete this role?")) {
