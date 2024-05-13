@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
-using System.Security.Cryptography.X509Certificates;
 
 namespace RiviksMusics.Controllers
 {
@@ -10,18 +9,17 @@ namespace RiviksMusics.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AlbumController(ILogger<HomeController> logger, ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
+        public AlbumController(ILogger<HomeController> logger, ApplicationDbContext context,UserManager<ApplicationUser> userManager,IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+       
         public IActionResult Index(List<Album> albums)
         {
             ViewBag.isalbum = "active";
@@ -60,7 +58,8 @@ namespace RiviksMusics.Controllers
             return View("AddAlbum", albums);
         }
 
-        public IActionResult AddAlbum(Album album)
+        [HttpPost]
+        public IActionResult AddAlbum(Album album, IFormFile? ImageFile)
         {
 
             if (ModelState.IsValid)
@@ -93,6 +92,13 @@ namespace RiviksMusics.Controllers
                 else
                 {
                     //Create
+
+                    var img = UploadImage(ImageFile);
+                    if (!string.IsNullOrEmpty(img))
+                    {
+                        Album.AlbumImage = img;
+                    }
+
                     _context.Album.Add(Album);
                     _context.SaveChanges();
                 }
@@ -113,7 +119,7 @@ namespace RiviksMusics.Controllers
             //       })
             //       .ToList();
             
-            ViewBag.Categories = new SelectList(_context.Category, "CategoryId", "CategoryName");
+          //  ViewBag.Categories = new SelectList(_context.Category, "CategoryId", "CategoryName");
             var editAlbum = _context.Album.Where(x => x.AlbumId == Id)
                 .Select(x => new Album
                 {
@@ -126,27 +132,34 @@ namespace RiviksMusics.Controllers
                 }).FirstOrDefault();
             return View("EditAlbum", editAlbum);
         }
-        public IActionResult EditAlbum(Album album)
-        {
 
+        [HttpPost]
+        public IActionResult EditAlbum(Album album, IFormFile? ImageFile)
+        {
             if (ModelState.IsValid)
             {
                 var Album = _context.Album.Find(album.AlbumId);
                 if (Album != null)
                 {
+                    var img = UploadImage(ImageFile);
+
                     Album.AlbumId = album.AlbumId;
                     Album.AlbumName = album.AlbumName;
                     Album.ArtistId = album.ArtistId;
                     Album.CategoryId = album.CategoryId;
                     Album.UploadDate = album.UploadDate;
-                    Album.AlbumImage = album.AlbumImage;
+                    if (!string.IsNullOrEmpty(img))
+                    {
+                        Album.AlbumImage = img;
+                    }
+
                     _context.Album.Update(Album);
                     _context.SaveChanges();
+
                     return RedirectToAction("Index");
                 }
                 else
                 {
-
                     return NotFound();
                 }
             }
@@ -201,6 +214,28 @@ namespace RiviksMusics.Controllers
             }).ToList();
             return Json(categories);
 
+        }
+        
+        public string UploadImage(IFormFile? ImageFile)
+        {
+            if (ImageFile != null && ImageFile.Length > 0)
+            {
+                // Generate a unique file name to avoid conflicts
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "img");
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Save the file to the specified path
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    ImageFile.CopyTo(fileStream);
+                }
+
+                // Update user's image path
+                return uniqueFileName;
+            }
+
+            return "";
         }
     }
 }
