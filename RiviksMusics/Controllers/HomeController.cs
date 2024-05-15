@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
 using System.Diagnostics;
+using System.Linq;
 
 
 namespace RiviksMusics.Controllers
@@ -13,45 +15,64 @@ namespace RiviksMusics.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger , ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
+        public HomeController(ILogger<HomeController> logger , ApplicationDbContext context, RoleManager<IdentityRole> roleManager ,IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
             _context = context;
             _roleManager = roleManager;
+            _webHostEnvironment = webHostEnvironment;
+             
         }
 
         public IActionResult Index()
         {
             return View();
         }
-
+        
         public IActionResult Albums()
         {
-            //ViewBag.isalbums = "active";
-            return View();
+            var DisplayAlbum = _context.Album.Select(D => new Album
+            {
+                AlbumId = D.AlbumId,
+                AlbumName = D.AlbumName,
+                ArtistId = D.ArtistId,
+                Category = D.Category,
+                UploadDate = D.UploadDate,
+                AlbumImage = D.AlbumImage,
+            }).OrderByDescending(D => D.AlbumName).ToList();
+            return View(DisplayAlbum);
         }
 
         public IActionResult Events()
         {
-            
             return View();
         }
         public IActionResult News()
         {
-
             return View();
         }
         public IActionResult Contact()
         {
-
             return View();
         }
-       /* public IActionResult Elements()
-        {
 
-            return View();
-        }*/
+        public IActionResult CategoryRole()
+        {
+            var categories = _context.Category.Select(c => new
+            {
+                c.CategoryId,
+                CategoryName = $"{c.CategoryName}"
+            }).ToList();
+            return Json(categories);
+
+        }
+        /* public IActionResult Elements()
+         {
+
+             return View();
+         }*/
 
         #region Role
 
