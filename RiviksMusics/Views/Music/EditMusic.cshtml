@@ -1,0 +1,240 @@
+﻿@model RiviksMusics.Models.Music
+
+@{
+    ViewData["Title"] = "EditMusic";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>EditMusic</h1>
+<div>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditMusic" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="MusicId" />
+            <input type="hidden" asp-for="AlbumId" />
+            <div class="form-group">
+                <label asp-for="SongName" class="control-label"></label>k
+                <span class="text-danger">*</span>
+                <input asp-for="SongName" class="form-control" />
+                <span asp-validation-for="SongName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label>SelectType</label>
+                <div>
+                    <label>
+                        <input type="radio" name="SelectType" value="Album" id="radioAlbum" checked /> Album
+                    </label>
+                    <label>
+                        <input type="radio" name="SelectType" value="Person" id="radioPerson" /> Person
+                    </label>
+                </div>
+                <span asp-validation-for="AlbumId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                @* <span class="text-danger">*</span> *@
+                <select asp-for="CategoryId" class="form-control selectCategory"></select>
+                @* <span asp-validation-for="CategoryId" class="text-danger"></span> *@
+            </div>
+
+            <div class="form-group">
+                <label asp-for="AlbumId" class="control-label"></label>
+                @* <span class="text-danger">*</span> *@
+                <select asp-for="AlbumId" class="form-control selectAlbum"></select>
+                @* <span asp-validation-for="AlbumId" class="text-danger"></span> *@
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ArtistId" class="control-label"></label>
+                <span class="text-danger">*</span>
+                <select asp-for="ArtistId" class="form-control selectArtist"></select>
+                <span asp-validation-for="ArtistId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" ></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UploadDate" class="control-label"></label>
+                <input asp-for="UploadDate" class="form-control" type="date" Max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="UploadDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UploadImage" class="control-label"></label>
+                <span class="text-danger">*</span>
+                <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                <span asp-validation-for="UploadImage" class="text-danger"></span>
+                @if (!string.IsNullOrWhiteSpace(Model.UploadImage))
+                {
+                    <img src="~/img/@Model.UploadImage" class="profile-user-img img-fluid " alt="Image" width="40px" />
+                }
+            </div>
+            <div class="form-group">
+                <label asp-for="UploadSong" class="control-label"></label>
+                <span class="text-danger">*</span>
+                <input name="AudioFile" id="AudioFile" type="file" class="form-control" accept="audio/*" />
+                <span asp-validation-for="UploadSong" class="text-danger"></span>
+                @if (!string.IsNullOrWhiteSpace(Model.UploadSong))
+                {
+                    <audio src="~/audio/@Model.UploadSong" class="profile-user-audio audio-fluid " alt="Audio" width="40px" />
+                }
+            </div>
+            <div class="form-group">
+                <button type="submit" value="Save" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function getCategoryRole() {
+                $.ajax({
+                    url: "@Url.Action("CategoryRole", "Music")",
+                    type: "GET",
+                    dataType: "Json",
+                    success: function (result) {
+                        let selectCategory = $("#CategoryId")
+                        selectCategory.empty();
+                        selectCategory.append('<option>--selectCategory--</option>');
+
+                        var mySelect = $('.selectCategory');
+                        $.each(result, function (idx, item) {
+
+                            mySelect.append(
+                                $('<option></option>').val(item.categoryId).html(item.categoryName)
+                            );
+                        });
+                        var selectCategoryId = "@Model.CategoryId";
+                        if (selectCategoryId !== null && selectCategoryId !== "") {
+                            selectCategory.val(selectCategoryId);
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to retrieve Category.');
+                    }
+                });
+            }
+
+            getCategoryRole();
+        })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            function getAlbumRole() {
+                $.ajax({
+                    url: "@Url.Action("AlbumRole", "Music")",
+                    type: "GET",
+                    dataType: "Json",
+                    success: function (result) {
+                        let selectAlbum = $("#AlbumId")
+                        selectAlbum.empty();
+                        selectAlbum.append('<option>--selectAlbum--</option>');
+
+                        var mySelect = $('.selectAlbum');
+                        $.each(result, function (idx, item) {
+
+                            mySelect.append(
+                                $('<option></option>').val(item.albumId).html(item.albumName)
+                            );
+                        });
+                        var selectAlbumId = "@Model.AlbumId";
+                        if (selectAlbumId !== null && selectAlbumId !== "") {
+                            selectAlbum.val(selectAlbumId);
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to retrieve Album.');
+                    }
+                });
+            }
+
+            getAlbumRole();
+        })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            function getArtist() {
+                $.ajax({
+                    url: "@Url.Action("ArtistRole", "Music")",
+                    type: "GET",
+                    dataType: "Json",
+                    success: function (result) {
+                        let selectArtist = $("#ArtistId")
+                        selectArtist.empty();
+                        selectArtist.append('<option>--selectArtist--</option>');
+
+                        var mySelect = $('.selectArtist');
+                        $.each(result, function (idx, item) {
+
+                            mySelect.append(
+                                $('<option></option>').val(item.id).html(item.fullName)
+                            );
+                        });
+                        var selectArtistId = "@Model.ArtistId";
+                        if (selectArtistId !== null && selectArtistId !== "") {
+                            selectArtist.val(selectArtistId);
+                        }
+                    },
+                    error: function () {
+                        alert('Failed to retrieve Artist');
+                    }
+                });
+            }
+
+            getArtist();
+        })
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        function toggleAlbumIdField() {
+            if ($('#radioPerson').is(':checked')) {
+                $('#AlbumId').prop('disabled', true);
+            } else {
+                $('#AlbumId').prop('disabled', false);
+            }
+        }
+
+        toggleAlbumIdField();
+
+        $('input[name="Type"]').change(function () {
+            toggleAlbumIdField();
+        });
+    });
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('input[type=radio][name=SelectType]').change(function () {
+            if (this.value == 'Album') {
+                $('#CategoryId').prop('disabled', true);
+            } else if (this.value == 'Person') {
+                $('#CategoryId').prop('disabled', false);
+            }
+        });
+
+        // Initial check on page load
+        if ($('input[type=radio][name=SelectType]:checked').val() == 'Album') {
+            $('#CategoryId').prop('disabled', true);
+        } else {
+            $('#CategoryId').prop('disabled', false);
+        }
+    });
+</script>
