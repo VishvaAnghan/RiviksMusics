@@ -10,12 +10,10 @@
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
-<table class="table">
+<table class="table" id="album">
     <thead>
         <tr style="background-color:lightpink">
-            @* <th>
-            @Html.DisplayNameFor(model => model.AlbumId)
-            </th> *@
+            
             <th>
                 @Html.DisplayNameFor(model => model.AlbumName)
             </th>
@@ -106,4 +104,7 @@
             });
         }
     </script>
+}
+@section album {
+    <script src="~/js/album.js"></script>
 }

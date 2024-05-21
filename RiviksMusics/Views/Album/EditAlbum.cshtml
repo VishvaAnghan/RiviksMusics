@@ -1,20 +1,14 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model RiviksMusics.Models.Album
-@* @inject UserManager<ApplicationUser> UserManager *@
 
 @{
     ViewData["Title"] = "EditAlbum";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    //var userImg = @UserManager.GetUserAsync(User).Result.Image;
-
 }
-
 <h1>Edit Album</h1>
 <div>
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
-
-
 <hr />
 <div class="row">
     <div class="col-md-4">

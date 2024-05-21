@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Cryptography.X509Certificates;
 
 namespace RiviksMusics.Controllers
 {
