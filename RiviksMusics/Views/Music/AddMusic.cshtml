@@ -5,7 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>AddMusic</h1>
+<h1>Add Music</h1>
 <div>
     <a asp-action="Index" class="btn btn-primary">Back to List</a>
 </div>
@@ -22,22 +22,36 @@
             </div>
 
             <div class="form-group">
-                <label>Select Type</label>
+                <label>Select Type</label><span class="text-danger">*</span>
                 <div>
-                    <label>
+                   @*  <label>
                         <input type="radio" name="SelectType" value="Album" id="radioAlbum" checked /> Album
-                    </label>
-                    <label>
+                    </label> *@
+                    <div class="form-check">
+                        <input asp-for="SelectType " class="form-check-input" type="radio" value="Album" id="radioAlbum" checked>
+                        <label asp-for="SelectType" class="form-check-label">
+                            Album
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input asp-for="SelectType" class="form-check-input" type="radio" value="Person" id="radioPerson">
+                        <label asp-for="SelectType" class="form-check-label">
+                            Person
+                        </label>
+                    </div>
+                   @*  <label>
                         <input type="radio" name="SelectType" value="Person" id="radioPerson" /> Person
-                    </label>
+                    </label> *@
+
                 </div>
-               @*  <span asp-validation-for="AlbumId" class="text-danger"></span> *@
+                 @* <span asp-validation-for="AlbumId" class="text-danger"></span>  *@
             </div>
+           
 
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label"></label>
                 @* <span class="text-danger">*</span> *@
-                <select asp-for="CategoryId" class="form-control selectCategory">
+                <select asp-for="CategoryId" class="form-control selectCategory" id="CategoryId">
                     <option> Select CategoryId</option>
                 </select>
                 @* <span asp-validation-for="CategoryId" class="text-danger"></span> *@
@@ -46,7 +60,7 @@
             <div class="form-group">
                 <label asp-for="AlbumId" class="control-label"></label>
                 @* <span class="text-danger">*</span> *@
-                <select asp-for="AlbumId" class="form-control selectAlbum">
+                <select asp-for="AlbumId" class="form-control selectAlbum" id="AlbumId">
                     <option> Select AlbumId</option>
                 </select>
                 @* <span asp-validation-for="AlbumId" class="text-danger"></span> *@
@@ -180,12 +194,6 @@
             getArtist();
         })
     </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
-
-    
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
@@ -204,43 +212,27 @@
             });
         });
     </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('input[type=radio][name=SelectType]').change(function () {
-            if (this.value == 'Album') {
-                $('#CategoryId').prop('disabled', true);
-            } else if (this.value == 'Person') {
-                $('#CategoryId').prop('disabled', false);
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function toggleCategoryIdField() {
+                if ($('#radioAlbum').is(':checked')) {
+                    $('#CategoryId').prop('disabled', true);
+                } else {
+                    $('#CategoryId').prop('disabled', false);
+                }
             }
-        });
 
-        // Initial check on page load
-        if ($('input[type=radio][name=SelectType]:checked').val() == 'Album') {
-            $('#CategoryId').prop('disabled', true);
-        } else {
-            $('#CategoryId').prop('disabled', false);
-        }
-    });
-</script>
-@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        function toggleCategoryIdField() {
-            if ($('#radioAlbum').is(':checked')) {
-                $('#CategoryId').prop('disabled', true);
-            } else {
-                $('#CategoryId').prop('disabled', false);
-            }
-        }
-
-        toggleCategoryIdField();
-
-        $('input[name="SelectType"]').change(function () {
             toggleCategoryIdField();
+
+            $('input[name="SelectType"]').change(function () {
+                toggleCategoryIdField();
+            });
         });
-    });
-</script> *@
-
-
+    </script>
+}
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+    
+   

@@ -5,19 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Music</h1>
-
 <p>
     <a asp-action="Create" class="btn btn-primary">Create New</a>
 </p>
+
+
+<h1>Music</h1>
+
 <table class="table" id="album">
+
     <thead>
         <tr style="background-color:lightpink">
             <th>
                 @Html.DisplayNameFor(model => model.SongName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SelectType)
+               Type
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category.CategoryName)
@@ -28,18 +31,25 @@
             <th>
                Artist Name
             </th>
-            <th>
+          @*   <th>
                 @Html.DisplayNameFor(model => model.Description)
-            </th>
+            </th> *@
             <th>
-                @Html.DisplayNameFor(model => model.UploadDate)
+                Upload Date
             </th>
             <th>
                  @Html.DisplayNameFor(model => model.UploadImage) 
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UploadSong)
+                Listen song
             </th>
+            <th>
+                View song
+            </th>
+            <th>
+                Download song
+            </th>
+
             <th>
                 Action
             </th>
@@ -65,9 +75,9 @@
 
                 @Html.DisplayFor(modelItem => item.User.LastName)
             </td>
-            <td>
+           @*  <td>
                 @Html.DisplayFor(modelItem => item.Description)
-            </td>
+            </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.UploadDate)
             </td>
@@ -87,6 +97,12 @@
                         </audio>
                     }
             </td>
+                <td>
+                    @item.ViewSong
+                </td>
+                <td>
+                    @item.DownloadSong
+                </td>
             <td>
                     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.MusicId"><i class="fas fa-edit"></i></a>
                     <button class="btn btn-danger" onclick="confirmFunction ('@item.MusicId')"><i class="fas fa-trash"></i></button>

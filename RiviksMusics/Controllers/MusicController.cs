@@ -23,6 +23,10 @@ namespace RiviksMusics.Controllers
         public IActionResult Index(List<Music> musics)
         {
             ViewBag.ismusic = "active";
+            DateTime today = DateTime.Today;
+            int viewsong = _context.Music.Count(i => i.UploadDate.Date == today);
+
+
             var model = new List<Music>();
             model = _context.Music.Select(m => new Music
             {
@@ -35,7 +39,9 @@ namespace RiviksMusics.Controllers
                 Description = m.Description,
                 UploadDate = m.UploadDate,
                 UploadImage = m.UploadImage,
-                UploadSong = m.UploadSong
+                UploadSong = m.UploadSong,
+                ViewSong = m.ViewSong,
+                DownloadSong = m.DownloadSong
             }).ToList();
             return View("Music", model);
         }
@@ -105,7 +111,7 @@ namespace RiviksMusics.Controllers
                     Description = x.Description,
                     UploadDate = x.UploadDate,
                     UploadImage = x.UploadImage,
-                    UploadSong = x.UploadSong,
+                    UploadSong = x.UploadSong
                 }).FirstOrDefault();
             return View("EditMusic", editMusic);
         }
@@ -121,12 +127,12 @@ namespace RiviksMusics.Controllers
                 {
                     var img = UploadImage(ImageFile);
                     var audio = UploadSong(AudioFile);
-
+                  
                     Music.MusicId = music.MusicId;
                     Music.SongName = music.SongName;
                     Music.SelectType = music.SelectType;
                     Music.CategoryId = music.CategoryId;
-                    Music.AlbumId = music.AlbumId;
+                    Music.AlbumId = music.SelectType == "Person"?(int?)null : music.AlbumId;
                     Music.ArtistId = music.ArtistId;
                     Music.Description = music.Description;
                     Music.UploadDate = music.UploadDate;
@@ -263,6 +269,48 @@ namespace RiviksMusics.Controllers
 
             return "";
         }
+
+        //public async Task<IActionResult> ViewSong(int id)
+        //{
+        //    var song = await _context.Music.FindAsync(id);
+        //    if (song == null)
+        //    {
+        //        song.ViewSong++;
+        //       await _context.SaveChangesAsync();
+        //    }
+
+        //    // Increment view count
+
+
+        //    return View(song);
+        //}
+        public ActionResult ViewSong(int id)
+        {
+            var song = _context.Music.Find(id);
+            if (song != null)
+            {
+                song.ViewSong++;
+                _context.SaveChanges();
+            }
+
+            return View(song);
+        }
+        public ActionResult DownloadSong(int id)
+        {
+            var song = _context.Music.Find(id);
+            if (song != null)
+            {
+                song.DownloadSong++;
+                _context.SaveChanges();
+            }
+
+            // Logic to handle the song file download can be added here
+
+            return RedirectToAction("Index");
+        }
+       
     }
+
 }
+
 

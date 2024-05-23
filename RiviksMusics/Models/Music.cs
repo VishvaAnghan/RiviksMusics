@@ -12,6 +12,7 @@ namespace RiviksMusics.Models
         [Required]
         [Display(Name = "Song Name")]
         public string? SongName { get; set; }
+        
         public string? SelectType { get; set; }
         
         [Display(Name = "Select Category")]
@@ -23,7 +24,7 @@ namespace RiviksMusics.Models
         [Display(Name = "Select Album")]
         public int? AlbumId { get; set; }
         public virtual Album? Album { get; set; }
-        [Required]
+        
         [Display(Name = "Select Artist")]
         public string? ArtistId { get; set; }
         [ForeignKey(nameof(ArtistId))]
@@ -36,6 +37,8 @@ namespace RiviksMusics.Models
         public string? UploadImage { get; set; }
         [Display(Name = "Upload Song")]
         public string? UploadSong { get; set; }
+        public int? ViewSong { get; set; }
+        public int? DownloadSong { get; set; }
 
 
     }
