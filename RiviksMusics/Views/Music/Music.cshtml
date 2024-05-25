@@ -44,10 +44,10 @@
                 Listen song
             </th>
             <th>
-                View song
+                # of Views
             </th>
             <th>
-                Download song
+                # of Downloads
             </th>
 
             <th>
@@ -97,15 +97,15 @@
                         </audio>
                     }
             </td>
-                <td>
-                    @item.ViewSong
-                </td>
-                <td>
-                    @item.DownloadSong
-                </td>
             <td>
-                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.MusicId"><i class="fas fa-edit"></i></a>
-                    <button class="btn btn-danger" onclick="confirmFunction ('@item.MusicId')"><i class="fas fa-trash"></i></button>
+                @item.ViewSong
+            </td>
+            <td>
+                @item.DownloadSong
+            </td>
+            <td>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.MusicId"><i class="fas fa-edit"></i></a>
+                <button class="btn btn-danger" onclick="confirmFunction ('@item.MusicId')"><i class="fas fa-trash"></i></button>
             </td>
         </tr>
 }

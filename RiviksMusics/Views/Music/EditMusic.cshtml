@@ -109,7 +109,7 @@
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
-                        let selectCategory = $("#CategoryId")
+                        let selectCategory = $("#categoryId")
                         selectCategory.empty();
                         selectCategory.append('<option>--selectCategory--</option>');
 
@@ -134,7 +134,6 @@
             getCategoryRole();
         })
     </script>
-
     <script>
         $(document).ready(function () {
             function getAlbumRole() {
@@ -143,7 +142,7 @@
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
-                        let selectAlbum = $("#AlbumId")
+                        let selectAlbum = $("#albumId")
                         selectAlbum.empty();
                         selectAlbum.append('<option>--selectAlbum--</option>');
 
@@ -160,7 +159,7 @@
                         }
                     },
                     error: function () {
-                        alert('Failed to retrieve Album.');
+                        alert('Failed to retrieve Category.');
                     }
                 });
             }
@@ -168,6 +167,7 @@
             getAlbumRole();
         })
     </script>
+   
 
     <script>
         $(document).ready(function () {
@@ -204,7 +204,6 @@
     </script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script type="text/javascript">
         $(document).ready(function () {
             function toggleAlbumIdField() {
@@ -240,8 +239,8 @@
             });
         });
     </script>
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+}
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 

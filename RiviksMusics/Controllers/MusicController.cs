@@ -40,8 +40,8 @@ namespace RiviksMusics.Controllers
                 UploadDate = m.UploadDate,
                 UploadImage = m.UploadImage,
                 UploadSong = m.UploadSong,
-                ViewSong = m.ViewSong,
-                DownloadSong = m.DownloadSong
+                ViewSong = m.ViewSong ?? 0,
+                DownloadSong = m.DownloadSong ?? 0
             }).ToList();
             return View("Music", model);
         }
@@ -131,8 +131,19 @@ namespace RiviksMusics.Controllers
                     Music.MusicId = music.MusicId;
                     Music.SongName = music.SongName;
                     Music.SelectType = music.SelectType;
-                    Music.CategoryId = music.CategoryId;
-                    Music.AlbumId = music.SelectType == "Person"?(int?)null : music.AlbumId;
+
+                    if (music.SelectType == "Person")
+                    {
+                        Music.CategoryId = music.CategoryId;
+                        Music.AlbumId = null;
+                    }
+                    else
+                    {
+                        Music.AlbumId = music.AlbumId;
+                        Music.CategoryId = null;
+                    }
+
+                   
                     Music.ArtistId = music.ArtistId;
                     Music.Description = music.Description;
                     Music.UploadDate = music.UploadDate;
@@ -198,7 +209,6 @@ namespace RiviksMusics.Controllers
                 CategoryName = $"{c.CategoryName}"
             }).ToList();
             return Json(categories);
-
         }
 
         public IActionResult AlbumRole()
@@ -209,7 +219,6 @@ namespace RiviksMusics.Controllers
                 AlbumName = $"{c.AlbumName}"
             }).ToList();
             return Json(albums);
-
         }
         public IActionResult ArtistRole()
         {
@@ -220,7 +229,6 @@ namespace RiviksMusics.Controllers
                      FullName = $"{u.FirstName} {u.LastName}"
                  })
                  .ToList();
-
             return Json(artists);
         }
 
@@ -270,20 +278,6 @@ namespace RiviksMusics.Controllers
             return "";
         }
 
-        //public async Task<IActionResult> ViewSong(int id)
-        //{
-        //    var song = await _context.Music.FindAsync(id);
-        //    if (song == null)
-        //    {
-        //        song.ViewSong++;
-        //       await _context.SaveChangesAsync();
-        //    }
-
-        //    // Increment view count
-
-
-        //    return View(song);
-        //}
         public ActionResult ViewSong(int id)
         {
             var song = _context.Music.Find(id);

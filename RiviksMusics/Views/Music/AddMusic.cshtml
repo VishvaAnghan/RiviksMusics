@@ -39,9 +39,7 @@
                             Person
                         </label>
                     </div>
-                   @*  <label>
-                        <input type="radio" name="SelectType" value="Person" id="radioPerson" /> Person
-                    </label> *@
+                  
 
                 </div>
                  @* <span asp-validation-for="AlbumId" class="text-danger"></span>  *@
@@ -51,7 +49,7 @@
             <div class="form-group">
                 <label asp-for="CategoryId" class="control-label"></label>
                 @* <span class="text-danger">*</span> *@
-                <select asp-for="CategoryId" class="form-control selectCategory" id="CategoryId">
+                <select asp-for="CategoryId" class="form-control selectCategory" id="categoryId">
                     <option> Select CategoryId</option>
                 </select>
                 @* <span asp-validation-for="CategoryId" class="text-danger"></span> *@
@@ -60,7 +58,7 @@
             <div class="form-group">
                 <label asp-for="AlbumId" class="control-label"></label>
                 @* <span class="text-danger">*</span> *@
-                <select asp-for="AlbumId" class="form-control selectAlbum" id="AlbumId">
+                <select asp-for="AlbumId" class="form-control selectAlbum" id="albumId">
                     <option> Select AlbumId</option>
                 </select>
                 @* <span asp-validation-for="AlbumId" class="text-danger"></span> *@
@@ -113,7 +111,7 @@
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
-                        let selectCategory = $("#CategoryId")
+                        let selectCategory = $("#categoryId")
                         selectCategory.empty();
                         selectCategory.append('<option>--selectCategory--</option>');
 
@@ -143,7 +141,7 @@
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
-                        let selectAlbum = $("#AlbumId")
+                        let selectAlbum = $("#albumId")
                         selectAlbum.empty();
                         selectAlbum.append('<option>--selectAlbum--</option>');
 
@@ -194,14 +192,15 @@
             getArtist();
         })
     </script>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             function toggleAlbumIdField() {
                 if ($('#radioPerson').is(':checked')) {
-                    $('#AlbumId').prop('disabled', true);
+                    $('#albumId').prop('disabled', true);
                 } else {
-                    $('#AlbumId').prop('disabled', false);
+                    $('#albumId').prop('disabled', false);
                 }
             }
 
@@ -217,9 +216,9 @@
         $(document).ready(function () {
             function toggleCategoryIdField() {
                 if ($('#radioAlbum').is(':checked')) {
-                    $('#CategoryId').prop('disabled', true);
+                    $('#categoryId').prop('disabled', true);
                 } else {
-                    $('#CategoryId').prop('disabled', false);
+                    $('#categoryId').prop('disabled', false);
                 }
             }
 
