@@ -1,17 +1,14 @@
-﻿ @model IEnumerable<RiviksMusics.Models.Album>
+﻿@model  IEnumerable<RiviksMusics.Models.PersonGroup>
 @{
-    ViewData["Title"] = "Albums";
+    ViewData["Title"] = "Singers";
     Layout = "~/Views/Shared/_MusicLayout.cshtml";
 }
 
 <section class="breadcumb-area bg-img bg-overlay" style="background-image: url(../../FrontEnd/img/bg-img/breadcumb3.jpg);">
-    <div class="bradcumbContent">
-        <p>See what’s new</p>
-        <h2>Latest Albums</h2>
-    </div>
+
+    <h2>Latest Music</h2>
 </section>
-<!-- ##### Breadcumb Area End ##### -->
-<!-- ##### Album Catagory Area Start ##### -->
+
 <section class="album-catagory section-padding-100-0">
     <div class="container">
         <div class="row">
@@ -48,32 +45,31 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row oneMusic-albums">
 
-            @foreach (var item in Model)
+             @foreach (var item in Model)
             {
-                <!-- Single Album -->
-                <div class="col-12 col-sm-4 col-md-3 col-lg-2 single-album-item @item?.AlbumName.Substring(0,1).ToLower()">
+                 <!-- Single Album -->
+                <div class="col-12 col-sm-4 col-md-3 col-lg-2 single-album-item @item.artistName.Substring(0,1).ToLower()">
                     <div class="single-album">
-                        <a asp-controller="Home" asp-action="AlbumDetails" asp-route-id="@item?.AlbumId">
-                            <img src="~/img/@item?.AlbumImage" id="image" alt="" style="width:400px; height:200px; object-fit:cover;">
+                        <a asp-controller="Home" asp-action="SingerDetails" asp-route-id="@item?.ArtistId">
+                            <img src="~/img/@item?.UploadImage" id="image" alt="" style="width:400px; height:200px; object-fit:cover;">
                         </a>
                         <div class="album-info">
                             <a href="#">
-                                <h5>@item?.AlbumName</h5>
+                                <h5>@item?.artistName - (@item.SongCount)</h5>
                             </a>
-                            <p>@item?.Category?.CategoryName</p>
+                            @* <p>@item?.Category?.CategoryName</p> *@
                         </div>
                     </div>
                 </div>
-            }
-
+             }
+ 
         </div>
     </div>
-</section>
-<!-- ##### Album Catagory Area End ##### -->
-<!-- ##### Buy Now Area Start ##### -->
+</section> 
+
 @* <div class="oneMusic-buy-now-area mb-100">
     <div class="container">
         <div class="row">
@@ -296,13 +292,4 @@
         </div>
     </div>
 </section>
-<!-- ##### Contact Area End ##### --> *@
-@section Scripts {
-    <script>
-        document.getElementById('image')
-            .addEventListener('click', function () {
-                window.open('AlbumDetails', 'Album');
-            });
-
-    </script>
-}
+ *@

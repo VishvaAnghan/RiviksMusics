@@ -1,14 +1,13 @@
 ﻿@* @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager *@
 @{
-    // var fullName = @UserManager.GetUserAsync(User).Result.FirstName + " " + @UserManager.GetUserAsync(User).Result.LastName;
-    // var userImg = @UserManager.GetUserAsync(User).Result.Image;
+    
 }
 
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
-    <a asp-controller="Home" asp-action="Index"  class="brand-link">
+    <a asp-controller="Home" asp-action="Index" class="brand-link">
         <img src="~/img/RV.jpg" alt="RV" class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">RiviksMusics</span>
     </a>
@@ -16,23 +15,9 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <!-- Sidebar user panel (optional) -->
-        @* <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-             <div class="nav-item">
-                <a asp-controller="User" asp-action="EditProfile" class="nav-link @ViewBag.isusereditprofile">
-                    @if (!string.IsNullOrWhiteSpace(userImg))
-                    {
-                        <img src="~/img/@userImg" alt="Image" width="40px" class="img-circle" />
-                    }
-                    else
-                    {
-                        <img src="~/img/AdminLTELogo.png" alt="Image" width="40px" class="img-circle" />
-                    }
-                    @fullName
-                </a>
-            </div> 
-        </div> *@
-
         
+
+
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
@@ -40,9 +25,9 @@
 
                 <li class="nav-item ">
                     <a asp-controller="Home" asp-action="Index" class="nav-link">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                         <i class="nav-icon fas fa-angle-double-right" style="color: #a2a5a9;"></i> 
                         <p>
-                            Go to Webiste
+                            Go to Website
                         </p>
                     </a>
                 </li>
@@ -53,10 +38,9 @@
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
                             Dashboard
-                         
                         </p>
                     </a>
-                   
+
                 </li>
 
                 <li class="nav-item">
@@ -64,27 +48,25 @@
                         <i class="nav-icon fas fa-th"></i>
                         <p>
                             Role
-                            
+
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a asp-controller="User" asp-action="User" class="nav-link  @ViewBag.isuser">
+                    <a asp-controller="User" asp-action="Index" class="nav-link  @ViewBag.isuser">
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                             User
-
                         </p>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a asp-controller="Category" asp-action="Category" class="nav-link  @ViewBag.iscategory">
+                    <a asp-controller="Category" asp-action="Index" class="nav-link  @ViewBag.iscategory">
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                             Category
-
                         </p>
                     </a>
                 </li>
@@ -93,7 +75,14 @@
                         <i class="nav-icon fas fa-user"></i>
                         <p>
                             Album
-
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a asp-controller="Music" asp-action="Index" class="nav-link  @ViewBag.ismusic">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>
+                            Music
                         </p>
                     </a>
                 </li>
