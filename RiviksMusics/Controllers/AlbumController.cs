@@ -47,11 +47,21 @@ namespace RiviksMusics.Controllers
         [HttpPost]
         public IActionResult AddAlbum(Album album, IFormFile? ImageFile)
         {
+            if (album.Sku.Contains(" "))
+            {
+                ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+            }
+            if (_context.Album.Any(a => a.Sku == album.Sku))
+            {
+                ModelState.AddModelError("Sku", "SKU already available.");
+            }
+
 
             if (ModelState.IsValid)
             {
                 var Album = new Album
                 {
+                    Sku = album.Sku,
                     AlbumName = album.AlbumName,
                     ArtistId = album.ArtistId,
                     CategoryId = album.CategoryId,
@@ -65,7 +75,7 @@ namespace RiviksMusics.Controllers
                     var albums = _context.Album.Find(album.AlbumId);
                     if (Album != null)
                     {
-
+                        album.Sku = album.Sku;
                         album.AlbumName = album.AlbumName;
                         album.ArtistId = album.ArtistId;
                         album.CategoryId = album.CategoryId;
@@ -101,6 +111,7 @@ namespace RiviksMusics.Controllers
                 .Select(x => new Album
                 {
                     AlbumId = x.AlbumId,
+                    Sku = x.Sku,
                     AlbumName = x.AlbumName,
                     ArtistId = x.ArtistId,
                     CategoryId = x.CategoryId,
@@ -113,6 +124,16 @@ namespace RiviksMusics.Controllers
         [HttpPost]
         public IActionResult EditAlbum(Album album, IFormFile? ImageFile)
         {
+            if (album.Sku.Contains(" "))
+            {
+                ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+            }
+            if (_context.Album.Any(a => a.Sku == album.Sku))
+            {
+                ModelState.AddModelError("Sku", "SKU already available.");
+            }
+
+
             if (ModelState.IsValid)
             {
                 var Album = _context.Album.Find(album.AlbumId);
@@ -121,6 +142,7 @@ namespace RiviksMusics.Controllers
                     var img = UploadImage(ImageFile);
 
                     Album.AlbumId = album.AlbumId;
+                    Album.Sku = album.Sku;
                     Album.AlbumName = album.AlbumName;
                     Album.ArtistId = album.ArtistId;
                     Album.CategoryId = album.CategoryId;

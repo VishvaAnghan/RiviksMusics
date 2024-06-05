@@ -31,7 +31,7 @@ namespace RiviksMusics.Models
         public virtual ApplicationUser? User { get; set; }
         public string? Description { get; set; }
         [DataType(DataType.Date)]
-        
+        [Display(Name ="Upload Date")]
         public DateTime UploadDate { get; set; }
         [Display(Name = "Upload Image")]
         public string? UploadImage { get; set; }
@@ -39,7 +39,9 @@ namespace RiviksMusics.Models
         public string? UploadSong { get; set; }
         public int? ViewSong { get; set; }
         public int? DownloadSong { get; set; }
+        //public int? ViewCount { get;  set; }
 
-
+        //public List<Music> Musics { get; set; }
+       // public int ViewSongCount { get; set; }
     }
 }

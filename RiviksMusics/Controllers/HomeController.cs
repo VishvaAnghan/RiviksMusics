@@ -2,15 +2,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
-using System.ComponentModel.Design;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks.Dataflow;
 
 
 namespace RiviksMusics.Controllers
@@ -53,18 +50,6 @@ namespace RiviksMusics.Controllers
 
         public async Task<IActionResult> Person(string id)
         {
-            /*var DisplayMusic = await _context.Music.Where(M => M.SelectType == "Person").Select(M => new Music
-            {
-                MusicId = M.MusicId,
-                SongName = M.SongName,
-                SelectType = M.SelectType,
-                Category = M.Category,
-                User = M.User,
-                UploadDate= M.UploadDate,
-                UploadImage= M.UploadImage,
-                UploadSong  = M.UploadSong,
-                ArtistId = M.ArtistId
-            }).OrderBy(M => M.SelectType).ToListAsync();*/
 
             var DisplayMusic = await _context.Music
                 .Where(M => M.SelectType == "Person").GroupBy(M => M.ArtistId)
@@ -72,7 +57,7 @@ namespace RiviksMusics.Controllers
                {
                    ArtistId = m.Key,
                    SongCount = m.Count(),
-                   artistName = (m.FirstOrDefault().User.FirstName + " "+ m.FirstOrDefault().User.LastName),
+                   artistName = (m.FirstOrDefault().User.FirstName + " " + m.FirstOrDefault().User.LastName),
                    SongName = (m.FirstOrDefault().SongName),
                    UploadImage = (m.FirstOrDefault().UploadImage)
                }).ToListAsync();
@@ -103,33 +88,38 @@ namespace RiviksMusics.Controllers
 
         }
 
+
+
         public async Task<IActionResult> AlbumDetails(int id)
         {
             var query = from album in _context.Album
-                            //join music in _context.Music on album.AlbumId equals music.AlbumId into musicAlbumGroup
-                            //from music in musicAlbumGroup.DefaultIfEmpty()
                         where album.AlbumId == id
                         select new MusicAlbumViewModel
                         {
                             AlbumId = album.AlbumId,
                             AlbumName = album.AlbumName,
-                            //Description = music.Description,
                             AlbumImage = album.AlbumImage,
-                            // SongName = music.SongName,
-                            // SelectType = music.SelectType,
-                            //Category = (music.Category != null) ? music.Category.CategoryName : "",
                             Category = album.Category,
                             User = album.User,
-                            // UploadDate = music.UploadDate,
-                            //Songs = new List<Music> {music}
                             Songs = _context.Music.Include(x => x.User).Where(x => x.AlbumId == album.AlbumId).ToList()
-                            //   UploadSong = music.UploadSong
                         };
 
-
+            
             var result = await query.FirstOrDefaultAsync();
+            foreach (var item in result.Songs)
+            {
+                var Music =await _context.Music.FindAsync(item.MusicId);
+                if (Music != null)
+                {
+                    Music.ViewSong = Music.ViewSong +1;
+                    _context.Music.Update(Music);
+                 await   _context.SaveChangesAsync();
+                }
+            }
+            
             return View(result);
         }
+
 
         public async Task<IActionResult> DownloadFile(int id)
         {
@@ -143,49 +133,48 @@ namespace RiviksMusics.Controllers
                 var showMusicName = song.SongName.Replace(' ', '-').Trim() + fi.Extension;
                 if (System.IO.File.Exists(filePath))
                 {
+                    
+                    song.DownloadSong = (song.DownloadSong ?? 0) + 1;
+                    _context.SaveChanges();
                     return File(System.IO.File.OpenRead(filePath), "application/octet-stream", showMusicName);
+
                 }
             }
 
-            return NotFound();
+             return NotFound();
+            
         }
 
-        
         public async Task<IActionResult> SingerDetails(string id)
         {
             var query = from music in _context.Music
                         where music.SelectType == "Person" && music.ArtistId == id
-
-                        //join music in _context.Music on album.AlbumId equals music.AlbumId into musicAlbumGroup
-                        //from music in musicAlbumGroup.DefaultIfEmpty()
                         select new MusicAlbumViewModel
                         {
-                            // AlbumId = album.AlbumId,
-                            //AlbumName = album.AlbumName,
-                            //Description = music.Description,
                             AlbumImage = music.UploadImage,
                             SongName = music.SongName,
-                            // SelectType = music.SelectType,
-                            //Category = (music.Category != null) ? music.Category.CategoryName : "",
                             Category = music.Category,
                             User = music.User,
-                            // UploadDate = music.UploadDate,
-                            //Songs = new List<Music> {music}
-                            MusicId =music.MusicId,
+                            MusicId = music.MusicId,
                             Songs = _context.Music.Include(x => x.User).Where(x => x.ArtistId == music.ArtistId).ToList(),
-                            UploadSong = music.UploadSong
+                            UploadSong = music.UploadSong,
+                            ViewSong = music.ViewSong,
+                            DownloadSong = music.DownloadSong
                         };
 
             var result = await query.ToListAsync();
+            foreach (var item in result)
+            {
+                var Music = await _context.Music.FindAsync(item.MusicId);
+                if (Music != null)
+                {
+                    Music.ViewSong = Music.ViewSong + 1;
+                    _context.Music.Update(Music);
+                    await _context.SaveChangesAsync();
+                }
+            }
             return View(result);
         }
-        /* public IActionResult Elements()
-         {
-
-             return View();
-         }*/
-
-
 
         public IActionResult ArtistRole()
         {
@@ -239,13 +228,12 @@ namespace RiviksMusics.Controllers
                     };
 
                     var result = await _roleManager.CreateAsync(identityRole);
-                    //_context.Roles.Add(identityRole);
-                    //_context.SaveChanges();
+
                 }
                 return RedirectToAction("Role");
             }
             return View(roleName);
-            //return RedirectToAction("Role");
+
         }
 
         [Authorize(Roles = "Admin")]
@@ -267,7 +255,7 @@ namespace RiviksMusics.Controllers
                 }
             }
             return View(roleName);
-            //return RedirectToAction("Role");
+
         }
 
         [Authorize(Roles = "Admin")]
@@ -299,6 +287,8 @@ namespace RiviksMusics.Controllers
         {
             return View();
         }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

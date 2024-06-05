@@ -18,6 +18,7 @@ namespace RiviksMusics.Models
         public string? Gender { get; set; }
         public string? Role { get; set; }
         public string? Image { get; set; }
-
+       // public bool IsArtist { get;  set; }
+      //  public bool IsAdmin { get;  set; }
     }
 }

@@ -26,5 +26,9 @@ namespace RiviksMusics.Models
       
         public int? SongCount { get; set; }
         public int? MusicId { get; set; }
+        public int? DownloadSong { get; set; }
+        public int? ViewSong {  get; set; }
+
+       
     }
 }

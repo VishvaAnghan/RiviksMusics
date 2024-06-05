@@ -11,19 +11,18 @@
 </div>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="EditMusic" method="post" enctype="multipart/form-data">
+    <div class="col-md-12">
+        <form asp-action="EditMusic" method="post" class="row g-2" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="MusicId" />
-            <input type="hidden" asp-for="AlbumId" />
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="SongName" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <input asp-for="SongName" class="form-control" />
                 <span asp-validation-for="SongName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label>Select Type</label><span class="text-danger">*</span>
                 <div>
                     <div class="form-check">
@@ -40,40 +39,40 @@
                     </div>
 
                 </div>
-                @* <span asp-validation-for="AlbumId" class="text-danger"></span>  *@
+                
             </div>
        
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="CategoryId" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <select asp-for="CategoryId" class="form-control selectCategory" id="categoryId"></select>
-                @* <span asp-validation-for="CategoryId" class="text-danger"></span> *@
+               
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="AlbumId" class="control-label"></label>
                  <span class="text-danger">*</span>
-                <select asp-for="AlbumId" class="form-control selectAlbum" id="albumId"></select>
-                @* <span asp-validation-for="AlbumId" class="text-danger"></span> *@
+                <select asp-for="AlbumId" class="form-control selectAlbum" ></select>
+                
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="ArtistId" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <select asp-for="ArtistId" class="form-control selectArtist"></select>
                 <span asp-validation-for="ArtistId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="UploadDate" class="control-label"></label>
                 <input asp-for="UploadDate" class="form-control" type="date" Max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="UploadDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="UploadImage" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
@@ -83,17 +82,18 @@
                     <img src="~/img/@Model.UploadImage" class="profile-user-img img-fluid " alt="Image" width="40px" />
                 }
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="UploadSong" class="control-label"></label>
-                <span class="text-danger">*</span>
-                <input name="AudioFile" id="AudioFile" type="file" class="form-control" accept="audio/*" />
+                <span id="fileNameDisplay" class="text-danger">*</span>
+                <input name="AudioFile" id="AudioFile" type="file" class="form-control" accept="audio/*"  />
+                
                 <span asp-validation-for="UploadSong" class="text-danger"></span>
                 @if (!string.IsNullOrWhiteSpace(Model.UploadSong))
                 {
-                    <audio src="~/audio/@Model.UploadSong" class="profile-user-audio audio-fluid " alt="Audio" width="40px" />
+                    <audio controls src="~/audio/@Model.UploadSong" class="profile-user-audio audio-fluid " alt="Audio" width="40px"></audio>
                 }
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-12">
                 <button type="submit" value="Save" class="btn btn-primary">Save</button>
             </div>
         </form>
@@ -101,6 +101,16 @@
 </div>
 
 @section Scripts {
+    <script>
+        function displayFileName(input) {
+            if (input.files.length > 0) {
+                var fileName = input.files[0].name;
+                document.getElementById("#UploadSong").innerText = fileName;
+            }
+        }
+    </script>
+
+
     <script>
         $(document).ready(function () {
             function getCategoryRole() {
@@ -142,7 +152,7 @@
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
-                        let selectAlbum = $("#albumId")
+                        let selectAlbum = $("#AlbumId")
                         selectAlbum.empty();
                         selectAlbum.append('<option>--selectAlbum--</option>');
 
@@ -179,7 +189,7 @@
                     success: function (result) {
                         let selectArtist = $("#ArtistId")
                         selectArtist.empty();
-                        selectArtist.append('<option>--selectArtist--</option>');
+                        selectArtist.append();
 
                         var mySelect = $('.selectArtist');
                         $.each(result, function (idx, item) {
@@ -188,10 +198,7 @@
                                 $('<option></option>').val(item.id).html(item.fullName)
                             );
                         });
-                        var selectArtistId = "@Model.ArtistId";
-                        if (selectArtistId !== null && selectArtistId !== "") {
-                            selectArtist.val(selectArtistId);
-                        }
+                      
                     },
                     error: function () {
                         alert('Failed to retrieve Artist');
@@ -203,14 +210,14 @@
         })
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script type="text/javascript">
         $(document).ready(function () {
             function toggleAlbumIdField() {
                 if ($('#radioPerson').is(':checked')) {
-                    $('#albumId').prop('disabled', true);
+                    $('#AlbumId').prop('disabled', true);
                 } else {
-                    $('#albumId').prop('disabled', false);
+                    $('#AlbumId').prop('disabled', false);
                 }
             }
 
@@ -221,7 +228,7 @@
             });
         });
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             function toggleCategoryIdField() {

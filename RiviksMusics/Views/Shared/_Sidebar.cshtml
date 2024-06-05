@@ -24,7 +24,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
                 <li class="nav-item ">
-                    <a asp-controller="Home" asp-action="Index" class="nav-link">
+                    <a asp-controller="Home" asp-action="Index" class="nav-link" target="_blank">
                          <i class="nav-icon fas fa-angle-double-right" style="color: #a2a5a9;"></i> 
                         <p>
                             Go to Website
@@ -33,6 +33,7 @@
                 </li>
                 <!-- Add icons to the links using the .nav-icon class
                      with font-awesome or any other icon font library -->
+
                 <li class="nav-item ">
                     <a asp-controller="Dashboard" asp-action="Index" class="nav-link @ViewBag.isdashbord">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -42,42 +43,51 @@
                     </a>
 
                 </li>
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Home" asp-action="Role" class="nav-link  @ViewBag.isrole">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Role
 
-                <li class="nav-item">
-                    <a asp-controller="Home" asp-action="Role" class="nav-link  @ViewBag.isrole">
-                        <i class="nav-icon fas fa-th"></i>
-                        <p>
-                            Role
-
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a asp-controller="User" asp-action="Index" class="nav-link  @ViewBag.isuser">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            User
-                        </p>
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a asp-controller="Category" asp-action="Index" class="nav-link  @ViewBag.iscategory">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            Category
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a asp-controller="Album" asp-action="Index" class="nav-link  @ViewBag.isalbum">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            Album
-                        </p>
-                    </a>
-                </li>
+                            </p>
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a asp-controller="User" asp-action="Index" class="nav-link  @ViewBag.isuser">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                User
+                            </p>
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Category" asp-action="Index" class="nav-link  @ViewBag.iscategory">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                Category
+                            </p>
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Album" asp-action="Index" class="nav-link  @ViewBag.isalbum">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                Album
+                            </p>
+                        </a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a asp-controller="Music" asp-action="Index" class="nav-link  @ViewBag.ismusic">
                         <i class="nav-icon fas fa-user"></i>

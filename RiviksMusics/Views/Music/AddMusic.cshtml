@@ -11,23 +11,23 @@
 </div>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="AddMusic" method="Post" enctype="multipart/form-data">
+    <div class="col-md-12">
+        <form asp-action="AddMusic" method="Post" class="row g-2" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="SongName" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <input asp-for="SongName" class="form-control" />
                 <span asp-validation-for="SongName" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label>Select Type</label><span class="text-danger">*</span>
                 <div>
-                   @*  <label>
-                        <input type="radio" name="SelectType" value="Album" id="radioAlbum" checked /> Album
+                    @*  <label>
+                    <input type="radio" name="SelectType" value="Album" id="radioAlbum" checked /> Album
                     </label> *@
-                    <div class="form-check">
+                    <div class="form-check ">
                         <input asp-for="SelectType " class="form-check-input" type="radio" value="Album" id="radioAlbum" checked>
                         <label asp-for="SelectType" class="form-check-label">
                             Album
@@ -39,14 +39,14 @@
                             Person
                         </label>
                     </div>
-                  
+
 
                 </div>
-                 @* <span asp-validation-for="AlbumId" class="text-danger"></span>  *@
+                @* <span asp-validation-for="AlbumId" class="text-danger"></span>  *@
             </div>
-           
 
-            <div class="form-group">
+
+            <div class="form-group col-md-4">
                 <label asp-for="CategoryId" class="control-label"></label>
                 @* <span class="text-danger">*</span> *@
                 <select asp-for="CategoryId" class="form-control selectCategory" id="categoryId">
@@ -55,46 +55,47 @@
                 @* <span asp-validation-for="CategoryId" class="text-danger"></span> *@
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="AlbumId" class="control-label"></label>
                 @* <span class="text-danger">*</span> *@
-                <select asp-for="AlbumId" class="form-control selectAlbum" id="albumId">
+                <select asp-for="AlbumId" class="form-control selectAlbum" >
                     <option> Select AlbumId</option>
                 </select>
                 @* <span asp-validation-for="AlbumId" class="text-danger"></span> *@
             </div>
 
-            <div class="form-group">
+            <div class="form-group col-md-4">
                 <label asp-for="ArtistId" class="control-label"></label>
                 <span class="text-danger">*</span>
+                @*  <input asp-for="ArtistId" class="form-control" /> *@
                 <select asp-for="ArtistId" class="form-control selectArtist">
                     <option> Select ArtistId</option>
                 </select>
                 <span asp-validation-for="ArtistId" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="Description" class="control-label"></label>
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="UploadDate" class="control-label"></label>
                 <input asp-for="UploadDate" class="form-control" type="date" value="@DateTime.Now.ToString("yyyy-MM-dd")" Max="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="UploadDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="UploadImage" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
                 <span asp-validation-for="UploadImage" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-6">
                 <label asp-for="UploadSong" class="control-label"></label>
                 <span class="text-danger">*</span>
                 <input name="AudioFile" id="AudioFile" type="file" class="form-control" accept="audio/*" />
                 <span asp-validation-for="UploadSong" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group col-md-12">
                 <button type="submit" class="btn btn-primary">Create</button>
             </div>
         </form>
@@ -141,7 +142,7 @@
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
-                        let selectAlbum = $("#albumId")
+                        let selectAlbum = $("#AlbumId")
                         selectAlbum.empty();
                         selectAlbum.append('<option>--selectAlbum--</option>');
 
@@ -166,14 +167,16 @@
     <script>
         $(document).ready(function () {
             function getArtist() {
+
                 $.ajax({
+
                     url: "@Url.Action("ArtistRole", "Music")",
                     type: "GET",
                     dataType: "Json",
                     success: function (result) {
                         let selectArtist = $("#ArtistId")
                         selectArtist.empty();
-                        selectArtist.append('<option>--selectArtist--</option>');
+                        selectArtist.append();
 
                         var mySelect = $('.selectArtist');
                         $.each(result, function (idx, item) {
@@ -198,9 +201,9 @@
         $(document).ready(function () {
             function toggleAlbumIdField() {
                 if ($('#radioPerson').is(':checked')) {
-                    $('#albumId').prop('disabled', true);
+                    $('#AlbumId').prop('disabled', true);
                 } else {
-                    $('#albumId').prop('disabled', false);
+                    $('#AlbumId').prop('disabled', false);
                 }
             }
 
@@ -233,5 +236,4 @@
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
-    
-   
+

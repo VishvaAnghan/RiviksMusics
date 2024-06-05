@@ -8,6 +8,7 @@ namespace RiviksMusics.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption. Identity)]
         public  int AlbumId { get; set; }
+        public string? Sku { get; set; }
         [Required]
         [Display(Name = "Album Name")]
         public string? AlbumName { get; set; }

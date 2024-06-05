@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
+using System.Linq;
 
 namespace RiviksMusics.Controllers
 {
@@ -12,6 +16,8 @@ namespace RiviksMusics.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+
+
         public MusicController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
@@ -20,31 +26,68 @@ namespace RiviksMusics.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index(List<Music> musics)
+        public async Task<IActionResult> Index(List<Music> musics, int? selectedAlbum)
         {
             ViewBag.ismusic = "active";
             DateTime today = DateTime.Today;
             int viewsong = _context.Music.Count(i => i.UploadDate.Date == today);
 
-
-            var model = new List<Music>();
-            model = _context.Music.Select(m => new Music
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
             {
-                MusicId = m.MusicId,
-                SongName = m.SongName,
-                SelectType = m.SelectType,
-                Category = m.Category,
-                Album = m.Album,
-                User = m.User,
-                Description = m.Description,
-                UploadDate = m.UploadDate,
-                UploadImage = m.UploadImage,
-                UploadSong = m.UploadSong,
-                ViewSong = m.ViewSong ?? 0,
-                DownloadSong = m.DownloadSong ?? 0
-            }).ToList();
-            return View("Music", model);
+                return Challenge();
+            }
+            var roles = await _userManager.GetRolesAsync(user);
+            if (roles.Contains("Artist"))
+            {
+
+                musics = _context.Music.Where(m => m.ArtistId == user.Id)
+                .Select(m => new Music
+                {
+                    MusicId = m.MusicId,
+                    SongName = m.SongName,
+                    SelectType = m.SelectType,
+                    Category = m.Category,
+                    Album = m.Album,
+                    User = m.User,
+                    Description = m.Description,
+                    UploadDate = m.UploadDate,
+                    UploadImage = m.UploadImage,
+                    UploadSong = m.UploadSong,
+                    ViewSong = m.ViewSong ?? 0,
+                    DownloadSong = m.DownloadSong ?? 0
+                }).ToList();
+            }
+            else if (roles.Contains("Admin"))
+            {
+               
+             musics = _context.Music
+              .Select(m => new Music
+              {
+                  MusicId = m.MusicId,
+                  SongName = m.SongName,
+                  SelectType = m.SelectType,
+                  Category = m.Category,
+                  Album = m.Album,
+                  User = m.User,
+                  Description = m.Description,
+                  UploadDate = m.UploadDate,
+                  UploadImage = m.UploadImage,
+                  UploadSong = m.UploadSong,
+                  ViewSong = m.ViewSong,
+                  DownloadSong = m.DownloadSong ?? 0
+              }).ToList();
+
+            }
+            else
+            {
+                musics = new List<Music>();
+            }
+
+
+            return View("Music", musics);
         }
+
         public IActionResult Create(Music musics)
         {
             ViewBag.ismusic = "active";
@@ -52,7 +95,7 @@ namespace RiviksMusics.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddMusic(Music music, IFormFile? ImageFile,IFormFile? AudioFile)
+        public IActionResult AddMusic(Music music, IFormFile? ImageFile, IFormFile? AudioFile)
         {
             if (ModelState.IsValid)
             {
@@ -68,8 +111,7 @@ namespace RiviksMusics.Controllers
                         ArtistId = music.ArtistId,
                         Description = music.Description,
                         UploadDate = music.UploadDate,
-                        //UploadImage = music.UploadImage,
-                        //UploadSong = music.UploadSong
+
                     };
 
                     var img = UploadImage(ImageFile);
@@ -111,7 +153,9 @@ namespace RiviksMusics.Controllers
                     Description = x.Description,
                     UploadDate = x.UploadDate,
                     UploadImage = x.UploadImage,
-                    UploadSong = x.UploadSong
+                    UploadSong = x.UploadSong,
+                    ViewSong = x.ViewSong,
+                    DownloadSong = x.DownloadSong
                 }).FirstOrDefault();
             return View("EditMusic", editMusic);
         }
@@ -127,7 +171,7 @@ namespace RiviksMusics.Controllers
                 {
                     var img = UploadImage(ImageFile);
                     var audio = UploadSong(AudioFile);
-                  
+
                     Music.MusicId = music.MusicId;
                     Music.SongName = music.SongName;
                     Music.SelectType = music.SelectType;
@@ -143,7 +187,7 @@ namespace RiviksMusics.Controllers
                         Music.CategoryId = null;
                     }
 
-                   
+
                     Music.ArtistId = music.ArtistId;
                     Music.Description = music.Description;
                     Music.UploadDate = music.UploadDate;
@@ -152,11 +196,12 @@ namespace RiviksMusics.Controllers
                         Music.UploadImage = img;
                     }
 
-                    //Music.UploadSong = music.UploadSong;
                     if (!string.IsNullOrEmpty(audio))
                     {
                         Music.UploadSong = audio;
                     }
+                    Music.ViewSong = music.ViewSong;
+                    Music.DownloadSong = music.DownloadSong;
                     _context.Music.Update(Music);
                     _context.SaveChanges();
                     return RedirectToAction("Index");
@@ -170,6 +215,9 @@ namespace RiviksMusics.Controllers
             return View("EditMusic", music);
 
         }
+
+
+
         public IActionResult Delete(Music music)
         {
             var deleteMusic = _context.Music.Where(x => x.MusicId == music.MusicId)
@@ -220,63 +268,82 @@ namespace RiviksMusics.Controllers
             }).ToList();
             return Json(albums);
         }
-        public IActionResult ArtistRole()
+
+
+        public async Task<IActionResult> ArtistRole()
         {
-            var artists = _context.Users.Where(u => u.Role == "artist")
-                 .Select(u => new
-                 {
-                     Id = u.Id,
-                     FullName = $"{u.FirstName} {u.LastName}"
-                 })
-                 .ToList();
+            var user = await _userManager.GetUserAsync(User);
+            var userId = user.Id;
+            var userRole = await _userManager.GetRolesAsync(user);
+            List<object> artists;
+            if (userRole.Contains("Artist"))
+            {
+                artists = _context.Users.Where(u => u.Id == userId)
+               .Select(u => new
+               {
+                   Id = u.Id,
+                   FullName = $"{u.FirstName} {u.LastName}"
+               }).ToList<object>();
+            }
+
+            else if (userRole.Contains("Admin"))
+            {
+                artists = _context.Users
+               .Select(u => new
+               {
+                   Id = u.Id,
+                   FullName = $"{u.FirstName} {u.LastName}"
+               }).ToList<object>();
+            }
+            else
+            {
+                artists = new List<object>();
+            }
             return Json(artists);
         }
+
+
 
         public string UploadImage(IFormFile? ImageFile)
         {
             if (ImageFile != null && ImageFile.Length > 0)
             {
-                // Generate a unique file name to avoid conflicts
+
                 var uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ImageFile.FileName);
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "img");
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                // Save the file to the specified path
+
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     ImageFile.CopyTo(fileStream);
                 }
 
-                // Update user's image path
                 return uniqueFileName;
             }
 
             return "";
         }
-
 
         public string UploadSong(IFormFile? AudioFile)
         {
             if (AudioFile != null && AudioFile.Length > 0)
             {
-                // Generate a unique file name to avoid conflicts
                 FileInfo fi = new FileInfo(AudioFile.FileName);
                 var uniqueFileName = Guid.NewGuid().ToString() + fi.Extension;
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "audio");
                 var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-                // Save the file to the specified path
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
                     AudioFile.CopyTo(fileStream);
                 }
-
-                // Update user's audio path
                 return uniqueFileName;
             }
-
             return "";
+
         }
+
 
         public ActionResult ViewSong(int id)
         {
@@ -287,7 +354,7 @@ namespace RiviksMusics.Controllers
                 _context.SaveChanges();
             }
 
-            return View(song);
+            return View("Index");
         }
         public ActionResult DownloadSong(int id)
         {
@@ -297,12 +364,9 @@ namespace RiviksMusics.Controllers
                 song.DownloadSong++;
                 _context.SaveChanges();
             }
-
-            // Logic to handle the song file download can be added here
-
             return RedirectToAction("Index");
         }
-       
+
     }
 
 }
