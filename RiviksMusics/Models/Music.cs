@@ -39,9 +39,8 @@ namespace RiviksMusics.Models
         public string? UploadSong { get; set; }
         public int? ViewSong { get; set; }
         public int? DownloadSong { get; set; }
-        //public int? ViewCount { get;  set; }
+        public long? AudioSize { get; set; }
 
-        //public List<Music> Musics { get; set; }
-       // public int ViewSongCount { get; set; }
+        
     }
 }

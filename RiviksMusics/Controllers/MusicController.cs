@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RiviksMusics.Data;
 using RiviksMusics.Models;
 using System.Linq;
+using System;
 
 namespace RiviksMusics.Controllers
 {
@@ -55,28 +56,30 @@ namespace RiviksMusics.Controllers
                     UploadImage = m.UploadImage,
                     UploadSong = m.UploadSong,
                     ViewSong = m.ViewSong ?? 0,
-                    DownloadSong = m.DownloadSong ?? 0
+                    DownloadSong = m.DownloadSong ?? 0,
+                    AudioSize = m.AudioSize
                 }).ToList();
             }
             else if (roles.Contains("Admin"))
             {
-               
-             musics = _context.Music
-              .Select(m => new Music
-              {
-                  MusicId = m.MusicId,
-                  SongName = m.SongName,
-                  SelectType = m.SelectType,
-                  Category = m.Category,
-                  Album = m.Album,
-                  User = m.User,
-                  Description = m.Description,
-                  UploadDate = m.UploadDate,
-                  UploadImage = m.UploadImage,
-                  UploadSong = m.UploadSong,
-                  ViewSong = m.ViewSong,
-                  DownloadSong = m.DownloadSong ?? 0
-              }).ToList();
+
+                musics = _context.Music
+                 .Select(m => new Music
+                 {
+                     MusicId = m.MusicId,
+                     SongName = m.SongName,
+                     SelectType = m.SelectType,
+                     Category = m.Category,
+                     Album = m.Album,
+                     User = m.User,
+                     Description = m.Description,
+                     UploadDate = m.UploadDate,
+                     UploadImage = m.UploadImage,
+                     UploadSong = m.UploadSong,
+                     ViewSong = m.ViewSong,
+                     DownloadSong = m.DownloadSong ?? 0,
+                     AudioSize = m.AudioSize
+                 }).ToList();
 
             }
             else
@@ -124,6 +127,7 @@ namespace RiviksMusics.Controllers
                     if (!string.IsNullOrEmpty(audio))
                     {
                         Music.UploadSong = audio;
+                        Music.AudioSize = AudioFile.Length;
                     }
 
                     _context.Music.Add(Music);
@@ -199,6 +203,7 @@ namespace RiviksMusics.Controllers
                     if (!string.IsNullOrEmpty(audio))
                     {
                         Music.UploadSong = audio;
+                        Music.AudioSize = AudioFile.Length;
                     }
                     Music.ViewSong = music.ViewSong;
                     Music.DownloadSong = music.DownloadSong;
@@ -215,9 +220,24 @@ namespace RiviksMusics.Controllers
             return View("EditMusic", music);
 
         }
+        public static class FileSizeHelper
+        {
+            public static string FormatBytes(long bytes)
+            {
+                const int scale = 1024;
+                string[] orders = new string[] { "GB", "MB", "KB", "Bytes" };
+                long max = (long)Math.Pow(scale, orders.Length - 1);
 
+                foreach (string order in orders)
+                {
+                    if (bytes > max)
+                        return string.Format("{0:##.##} {1}", decimal.Divide(bytes, max), order);
 
-
+                    max /= scale;
+                }
+                return "0 Bytes";
+            }
+        }
         public IActionResult Delete(Music music)
         {
             var deleteMusic = _context.Music.Where(x => x.MusicId == music.MusicId)
