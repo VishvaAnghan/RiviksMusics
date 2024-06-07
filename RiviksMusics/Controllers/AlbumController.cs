@@ -29,6 +29,7 @@ namespace RiviksMusics.Controllers
             model = _context.Album.Select(m => new Album
             {
                 AlbumId = m.AlbumId,
+                Sku = m.Sku,
                 AlbumName = m.AlbumName,
                 User = m.User,
                 Category = m.Category,

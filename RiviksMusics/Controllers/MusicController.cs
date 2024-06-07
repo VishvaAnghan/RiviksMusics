@@ -27,7 +27,7 @@ namespace RiviksMusics.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public async Task<IActionResult> Index(List<Music> musics, int? selectedAlbum)
+        public async Task<IActionResult> Index(List<Music> musics)
         {
             ViewBag.ismusic = "active";
             DateTime today = DateTime.Today;
@@ -46,6 +46,7 @@ namespace RiviksMusics.Controllers
                 .Select(m => new Music
                 {
                     MusicId = m.MusicId,
+                    Sku = m.Sku,
                     SongName = m.SongName,
                     SelectType = m.SelectType,
                     Category = m.Category,
@@ -67,6 +68,7 @@ namespace RiviksMusics.Controllers
                  .Select(m => new Music
                  {
                      MusicId = m.MusicId,
+                     Sku = m.Sku,
                      SongName = m.SongName,
                      SelectType = m.SelectType,
                      Category = m.Category,
@@ -108,6 +110,7 @@ namespace RiviksMusics.Controllers
                     var Music = new Music
                     {
                         SongName = music.SongName,
+                        Sku = music.Sku,
                         SelectType = music.SelectType,
                         CategoryId = music.CategoryId,
                         AlbumId = music.AlbumId,
@@ -149,6 +152,7 @@ namespace RiviksMusics.Controllers
                 .Select(x => new Music
                 {
                     MusicId = x.MusicId,
+                    Sku = x.Sku,
                     SongName = x.SongName,
                     SelectType = x.SelectType,
                     CategoryId = x.CategoryId,
@@ -177,6 +181,7 @@ namespace RiviksMusics.Controllers
                     var audio = UploadSong(AudioFile);
 
                     Music.MusicId = music.MusicId;
+                    Music.Sku = music.Sku;
                     Music.SongName = music.SongName;
                     Music.SelectType = music.SelectType;
 
@@ -219,24 +224,6 @@ namespace RiviksMusics.Controllers
             }
             return View("EditMusic", music);
 
-        }
-        public static class FileSizeHelper
-        {
-            public static string FormatBytes(long bytes)
-            {
-                const int scale = 1024;
-                string[] orders = new string[] { "GB", "MB", "KB", "Bytes" };
-                long max = (long)Math.Pow(scale, orders.Length - 1);
-
-                foreach (string order in orders)
-                {
-                    if (bytes > max)
-                        return string.Format("{0:##.##} {1}", decimal.Divide(bytes, max), order);
-
-                    max /= scale;
-                }
-                return "0 Bytes";
-            }
         }
         public IActionResult Delete(Music music)
         {

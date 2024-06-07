@@ -1,8 +1,10 @@
-﻿@model IEnumerable<RiviksMusics.Models.Music>
+﻿
+@model IEnumerable<RiviksMusics.Models.Music>
 
 @{
     ViewData["Title"] = "Music";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    @using RiviksMusics.Helper
 }
 
 <p>
@@ -20,7 +22,7 @@
                 @Html.DisplayNameFor(model => model.SongName)
             </th>
             <th>
-               Type
+                Type
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Category.CategoryName)
@@ -29,16 +31,16 @@
                 @Html.DisplayNameFor(model => model.Album.AlbumName)
             </th>
             <th>
-               Artist Name
+                Artist Name
             </th>
-          @*   <th>
-                @Html.DisplayNameFor(model => model.Description)
+            @*   <th>
+            @Html.DisplayNameFor(model => model.Description)
             </th> *@
             <th>
                 Upload Date
             </th>
             <th>
-                 @Html.DisplayNameFor(model => model.UploadImage) 
+                @Html.DisplayNameFor(model => model.UploadImage)
             </th>
             <th>
                 Listen song
@@ -49,46 +51,49 @@
             <th>
                 # of Downloads
             </th>
-
+            <th>
+               AudioSize
+            </th>
             <th>
                 Action
             </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SongName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SelectType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Album.AlbumName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SongName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SelectType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Album.AlbumName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FirstName)
 
-                @Html.DisplayFor(modelItem => item.User.LastName)
-            </td>
-           @*  <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                    @Html.DisplayFor(modelItem => item.User.LastName)
+                </td>
+                @*  <td>
+            @Html.DisplayFor(modelItem => item.Description)
             </td> *@
-            <td>
-                @Html.DisplayFor(modelItem => item.UploadDate)
-            </td>
-            <td>
-                @* @Html.DisplayFor(modelItem => item.UploadImage)  *@
+                <td>
+                    @Html.DisplayFor(modelItem => item.UploadDate)
+                </td>
+                <td>
+                    @* @Html.DisplayFor(modelItem => item.UploadImage)  *@
                     @if (!string.IsNullOrWhiteSpace(item.UploadImage))
                     {
                         <img src="~/img/@item.UploadImage" class="profile-user-img img-fluid img-square" alt="Image" width="50px" height="50px" />
                     }
-            </td>
-            <td>
+                </td>
+                <td>
                     @if (!string.IsNullOrWhiteSpace(item.UploadImage))
                     {
                         <audio controls>
@@ -96,19 +101,22 @@
                             Your browser does not support the audio element.
                         </audio>
                     }
-            </td>
-            <td>
-                @item.ViewSong
-            </td>
-            <td>
-                @item.DownloadSong
-            </td>
-            <td>
-                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.MusicId"><i class="fas fa-edit"></i></a>
-                <button class="btn btn-danger" onclick="confirmFunction ('@item.MusicId')"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>
-}
+                </td>
+                <td>
+                    @item.ViewSong
+                </td>
+                <td>
+                    @item.DownloadSong
+                </td>
+                <td>
+                    @FileSizeHelper.FormatBytes(item.AudioSize ?? 0)
+                </td>
+                <td>
+                    <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.MusicId"><i class="fas fa-edit"></i></a>
+                    <button class="btn btn-danger" onclick="confirmFunction ('@item.MusicId')"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 @section Scripts {

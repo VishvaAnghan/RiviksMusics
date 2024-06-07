@@ -38,6 +38,7 @@ namespace RiviksMusics.Controllers
             var DisplayAlbum = await _context.Album.Select(D => new Album
             {
                 AlbumId = D.AlbumId,
+                Sku = D.Sku,
                 AlbumName = D.AlbumName,
                 ArtistId = D.ArtistId,
                 Category = D.Category,
@@ -90,10 +91,10 @@ namespace RiviksMusics.Controllers
 
 
 
-        public async Task<IActionResult> AlbumDetails(int id)
+        public async Task<IActionResult> AlbumDetails(string Sku)
         {
             var query = from album in _context.Album
-                        where album.AlbumId == id
+                        where album.Sku == Sku
                         select new MusicAlbumViewModel
                         {
                             AlbumId = album.AlbumId,
@@ -104,19 +105,19 @@ namespace RiviksMusics.Controllers
                             Songs = _context.Music.Include(x => x.User).Where(x => x.AlbumId == album.AlbumId).ToList()
                         };
 
-            
+
             var result = await query.FirstOrDefaultAsync();
             foreach (var item in result.Songs)
             {
-                var Music =await _context.Music.FindAsync(item.MusicId);
+                var Music = await _context.Music.FindAsync(item.MusicId);
                 if (Music != null)
                 {
-                    Music.ViewSong = Music.ViewSong +1;
+                    Music.ViewSong = ((Music.ViewSong ?? 0) + 1);
                     _context.Music.Update(Music);
-                 await   _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
             }
-            
+
             return View(result);
         }
 
@@ -133,7 +134,7 @@ namespace RiviksMusics.Controllers
                 var showMusicName = song.SongName.Replace(' ', '-').Trim() + fi.Extension;
                 if (System.IO.File.Exists(filePath))
                 {
-                    
+
                     song.DownloadSong = (song.DownloadSong ?? 0) + 1;
                     _context.SaveChanges();
                     return File(System.IO.File.OpenRead(filePath), "application/octet-stream", showMusicName);
@@ -141,14 +142,14 @@ namespace RiviksMusics.Controllers
                 }
             }
 
-             return NotFound();
-            
+            return NotFound();
+
         }
 
         public async Task<IActionResult> SingerDetails(string id)
         {
             var query = from music in _context.Music
-                        where music.SelectType == "Person" && music.ArtistId == id
+                        where music.SelectType == "Person" && music.ArtistId == id 
                         select new MusicAlbumViewModel
                         {
                             AlbumImage = music.UploadImage,
@@ -168,7 +169,7 @@ namespace RiviksMusics.Controllers
                 var Music = await _context.Music.FindAsync(item.MusicId);
                 if (Music != null)
                 {
-                    Music.ViewSong = Music.ViewSong + 1;
+                    Music.ViewSong = ((Music.ViewSong ??0)+ 1);
                     _context.Music.Update(Music);
                     await _context.SaveChangesAsync();
                 }

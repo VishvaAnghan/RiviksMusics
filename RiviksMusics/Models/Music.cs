@@ -8,6 +8,8 @@ namespace RiviksMusics.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MusicId { get; set; }
+
+        public string? Sku {  get; set; } 
         [MaxLength(150)]
         [Required]
         [Display(Name = "Song Name")]
