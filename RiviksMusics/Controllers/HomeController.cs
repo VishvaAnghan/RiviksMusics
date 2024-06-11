@@ -28,11 +28,50 @@ namespace RiviksMusics.Controllers
 
         }
 
-        public IActionResult Index()
+        public  IActionResult Index()
         {
-            return View();
-        }
+            /*var LatestAlbums = _context.Album.OrderByDescending(m => m.UploadDate).Take(12).ToList();
+                
+            return View(LatestAlbums);*/
+            var latestAlbums = _context.Album.OrderByDescending(m => m.UploadDate).Take(12).ToList();
+            var latestSong = _context.Music.OrderByDescending(s => s.UploadDate).FirstOrDefault();
 
+            var latestSongs = _context.Music.OrderByDescending(s => s.UploadDate).Take(6).ToList();
+           
+            var albumsong =  _context.Album.Select(D => new IndexViewModel
+            {
+                Sku = D.Sku,
+                AlbumName = D.AlbumName,
+                AlbumImage = D.AlbumImage,
+                Category = D.Category,
+                
+            }).Take(6).ToList();
+
+            var DisplayMusic =  _context.Music
+                .Where(M => M.SelectType == "Person").GroupBy(M => M.ArtistId)
+               .Select(m => new IndexViewModel
+               {
+                   ArtistId = m.Key,
+                   Sku = (m.FirstOrDefault().User.Sku),
+                   artistName = (m.FirstOrDefault().User.FirstName + " " + m.FirstOrDefault().User.LastName),
+                   SongName = (m.FirstOrDefault().SongName),
+                   UploadImage = (m.FirstOrDefault().UploadImage),
+                   AudioSize = ((long)m.FirstOrDefault().AudioSize)
+               }).Take(6).ToList();
+
+            var viewModel = new IndexViewModel
+            {
+                LatestAlbums = latestAlbums,
+                LatestSong = latestSong,
+                LatestSongs = latestSongs,
+                AlbumSong = albumsong,
+                Displaymusic = DisplayMusic
+                
+            };
+
+            return View(viewModel);
+        }
+        
         public async Task<IActionResult> Albums()
         {
             var DisplayAlbum = await _context.Album.Select(D => new Album
@@ -49,7 +88,7 @@ namespace RiviksMusics.Controllers
 
         }
 
-        public async Task<IActionResult> Person(string id)
+        public async Task<IActionResult> Person()
         {
 
             var DisplayMusic = await _context.Music
@@ -57,6 +96,7 @@ namespace RiviksMusics.Controllers
                .Select(m => new PersonGroup
                {
                    ArtistId = m.Key,
+                   Sku = (m.FirstOrDefault().User.Sku),
                    SongCount = m.Count(),
                    artistName = (m.FirstOrDefault().User.FirstName + " " + m.FirstOrDefault().User.LastName),
                    SongName = (m.FirstOrDefault().SongName),
@@ -149,7 +189,7 @@ namespace RiviksMusics.Controllers
         public async Task<IActionResult> SingerDetails(string id)
         {
             var query = from music in _context.Music
-                        where music.SelectType == "Person" && music.ArtistId == id 
+                        where music.SelectType == "Person" && music.User.Sku == id 
                         select new MusicAlbumViewModel
                         {
                             AlbumImage = music.UploadImage,
@@ -160,7 +200,8 @@ namespace RiviksMusics.Controllers
                             Songs = _context.Music.Include(x => x.User).Where(x => x.ArtistId == music.ArtistId).ToList(),
                             UploadSong = music.UploadSong,
                             ViewSong = music.ViewSong,
-                            DownloadSong = music.DownloadSong
+                            DownloadSong = music.DownloadSong,
+                            AudioSize = music.AudioSize
                         };
 
             var result = await query.ToListAsync();
@@ -191,7 +232,7 @@ namespace RiviksMusics.Controllers
         }
 
         #region Role
-
+        
         [Authorize(Roles = "Admin")]
         public IActionResult Role(List<Roles> roles)
         {

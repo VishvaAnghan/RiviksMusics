@@ -103,10 +103,10 @@
                     }
                 </td>
                 <td>
-                    @item.ViewSong
+                    @FileSizeHelper.ToShorthand(item.ViewSong ?? 0)
                 </td>
                 <td>
-                    @item.DownloadSong
+                    @FileSizeHelper.ToShorthand(item.DownloadSong ?? 0)
                 </td>
                 <td>
                     @FileSizeHelper.FormatBytes(item.AudioSize ?? 0)

@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations;
 namespace RiviksMusics.Models
 {
     public class ApplicationUser : IdentityUser
-    { 
+    {
+        public string? Sku { get; set; }
         [Display(Name = "First Name")]
         public string? FirstName { get; set; }
         [Display(Name = "Last Name")]

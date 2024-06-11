@@ -22,6 +22,15 @@ namespace RiviksMusics.Helper
             }
             return "0 Bytes";
         }
+        public static string ToShorthand(long number)
+        {
+            if (number >= 1000000)
+                return (number / 1000000D).ToString("0.#") + "M";
+            if (number >= 1000)
+                return (number / 1000D).ToString("0.#") + "K";
+
+            return number.ToString();
+        }
     }
     
 }

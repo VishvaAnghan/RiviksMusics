@@ -37,6 +37,7 @@ namespace RiviksMusics.Controllers
             model = _context.Users.Select(u => new User
             {
                 Id = u.Id,
+                Sku = u.Sku,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
                 Email = u.Email,
@@ -69,10 +70,20 @@ namespace RiviksMusics.Controllers
         }
         public async Task<IActionResult> AddUser(User user)
         {
+            if (user.Sku.Contains(" "))
+            {
+                ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+            }
+            if (_context.Users.Any(a => a.Sku == user.Sku))
+            {
+                ModelState.AddModelError("Sku", "SKU already available.");
+            }
+
             if (ModelState.IsValid)
             {
                 var applicationUser = new ApplicationUser
                 {
+                    Sku = user.Sku,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email,
@@ -91,6 +102,7 @@ namespace RiviksMusics.Controllers
                     var User = await _context.Users.FindAsync(user.Id);
                     if (User != null)
                     {
+                        User.Sku = user.Sku;
                         User.FirstName = user.FirstName;
                         User.LastName = user.LastName;
                         User.Email = user.Email;
@@ -135,6 +147,7 @@ namespace RiviksMusics.Controllers
                 .Select(x => new User
                 {
                     Id = x.Id,
+                    Sku =x.Sku,
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     Email = x.Email,
@@ -163,6 +176,15 @@ namespace RiviksMusics.Controllers
         }
         public async Task<IActionResult> EditUser(User user)
         {
+            if (user.Sku.Contains(" "))
+            {
+                ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+            }
+            if (_context.Users.Any(a => a.Sku == user.Sku))
+            {
+                ModelState.AddModelError("Sku", "SKU already available.");
+            }
+
             var isEmailExist = await _context.Users.Where(x => x.Id != user.Id && x.Email == user.Email).FirstOrDefaultAsync();
             if (isEmailExist != null)
             {
@@ -174,6 +196,7 @@ namespace RiviksMusics.Controllers
                 var applicationUser = await _context.Users.FindAsync(user.Id);
                 if (applicationUser != null)
                 {
+                    applicationUser.Sku = user.Sku;
                     applicationUser.FirstName = user.FirstName;
                     applicationUser.LastName = user.LastName;
                     applicationUser.Email = user.Email;

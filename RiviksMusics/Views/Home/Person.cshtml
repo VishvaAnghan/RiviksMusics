@@ -53,14 +53,14 @@
              @foreach (var item in Model)
             {
                  <!-- Single Album -->
-                <div class="col-12 col-sm-4 col-md-3 col-lg-2 single-album-item @item.artistName.Substring(0,1).ToLower()">
+                <div class="col-12 col-sm-4 col-md-3 col-lg-2 single-album-item @item?.artistName.Substring(0,1).ToLower()">
                     <div class="single-album">
-                        <a asp-controller="Home" asp-action="SingerDetails" asp-route-id="@item?.ArtistId">
+                        <a asp-controller="Home" asp-action="SingerDetails" asp-route-id="@item?.Sku">
                             <img src="~/img/@item?.UploadImage" id="image" alt="" style="width:400px; height:200px; object-fit:cover;">
                         </a>
                         <div class="album-info">
                             <a href="#">
-                                <h5>@item?.artistName - (@item.SongCount)</h5>
+                                <h5>@item?.artistName - (@item?.SongCount)</h5>
                             </a>
                             @* <p>@item?.Category?.CategoryName</p> *@
                         </div>

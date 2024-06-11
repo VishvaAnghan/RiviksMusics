@@ -46,7 +46,6 @@ namespace RiviksMusics.Controllers
                 .Select(m => new Music
                 {
                     MusicId = m.MusicId,
-                    Sku = m.Sku,
                     SongName = m.SongName,
                     SelectType = m.SelectType,
                     Category = m.Category,
@@ -68,7 +67,6 @@ namespace RiviksMusics.Controllers
                  .Select(m => new Music
                  {
                      MusicId = m.MusicId,
-                     Sku = m.Sku,
                      SongName = m.SongName,
                      SelectType = m.SelectType,
                      Category = m.Category,
@@ -110,7 +108,6 @@ namespace RiviksMusics.Controllers
                     var Music = new Music
                     {
                         SongName = music.SongName,
-                        Sku = music.Sku,
                         SelectType = music.SelectType,
                         CategoryId = music.CategoryId,
                         AlbumId = music.AlbumId,
@@ -152,7 +149,6 @@ namespace RiviksMusics.Controllers
                 .Select(x => new Music
                 {
                     MusicId = x.MusicId,
-                    Sku = x.Sku,
                     SongName = x.SongName,
                     SelectType = x.SelectType,
                     CategoryId = x.CategoryId,
@@ -181,7 +177,6 @@ namespace RiviksMusics.Controllers
                     var audio = UploadSong(AudioFile);
 
                     Music.MusicId = music.MusicId;
-                    Music.Sku = music.Sku;
                     Music.SongName = music.SongName;
                     Music.SelectType = music.SelectType;
 

@@ -19,6 +19,11 @@
             <input type="hidden" asp-for="Id"/>
 
             <div class="form-group col-md-6">
+                <label asp-for="Sku" class="control-label"></label><span class="text-danger">*</span>
+                <input asp-for="Sku" class="form-control" />
+                <span asp-validation-for="Sku" class="text-danger"></span>
+            </div>
+            <div class="form-group col-md-6">
                 <label asp-for="FirstName" class="control-label"></label><span class="text-danger">*</span>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>

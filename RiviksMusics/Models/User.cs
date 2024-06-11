@@ -5,6 +5,7 @@ namespace RiviksMusics.Models
     public class User
     {
         public string? Id { get; set; }
+        public string? Sku { get; set; }
         [Required]
         [Display(Name = "First Name")]
         public string? FirstName { get; set; }

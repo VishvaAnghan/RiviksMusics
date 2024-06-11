@@ -3,6 +3,7 @@
     public class PersonGroup
     {
         public string? ArtistId { get; set; }
+        public string? Sku { get; set; }
         public int SongCount { get; set; }
         public string? SongName { get; set; }
         public string? UploadImage { get; set; }

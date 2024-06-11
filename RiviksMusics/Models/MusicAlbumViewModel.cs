@@ -17,19 +17,20 @@ namespace RiviksMusics.Models
 
         public virtual ApplicationUser? User { get; set; }
         public string? Description { get; set; }
-        //public DateTime UploadDate { get; set; }
+        public DateTime UploadDate { get; set; }
         public string? AlbumImage { get; set; }
-
         public Music? Song { get; set; }
         public List<Music>? Songs { get; set; }
         public string? UploadSong { get; set; }
-      
         public int? SongCount { get; set; }
         public int? MusicId { get; set; }
         public int? DownloadSong { get; set; }
         public int? ViewSong {  get; set; }
         public long? AudioSize { get; set; }
+        public object? LastSong { get; internal set; }
+        public Music? LatestAlbum { get; internal set; }
+        public List<Music>? LatestAlbums { get; internal set; }
 
-       
+        
     }
 }
