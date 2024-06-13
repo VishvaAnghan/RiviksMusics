@@ -19,7 +19,7 @@ namespace RiviksMusics.Data
         public DbSet<Album> Album { get; set; }
         
         public DbSet<Music> Music { get; set; }
-
+        public DbSet<Plan> Plan { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

@@ -1,0 +1,125 @@
+﻿@model IEnumerable<RiviksMusics.Models.PayNow>
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Plan";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var fullName = @UserManager.GetUserAsync(User).Result.FirstName + " " + @UserManager.GetUserAsync(User).Result.LastName;
+    var userEmail = @UserManager.GetUserAsync(User).Result.Email;
+    var userPhoneNo = @UserManager.GetUserAsync(User).Result.PhoneNo;
+}
+
+<h1>Plan</h1>
+
+<table class="table">
+    <thead>
+        <tr style="background-color:lightpink">
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Duration</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>@item.PlanName</td>
+                <td>&#8377; @item.Rupees</td>
+                <td>@item.Duration</td>
+                <td>
+                    <button type="button" id="" class="btn btn-primary payBtn" data-id="@item.PlanId">Pay Now</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@* <form asp-action="Payment" method="post" name="razorpayForm">
+    <input id="razorpay_payment_id" type="hidden" name="razorpay_payment_id" />
+    <input id="razorpay_order_id" type="hidden" name="razorpay_order_id" />
+    <input id="razorpay_signature" type="hidden" name="razorpay_signature" />
+</form>
+ *@
+
+@section Scripts {
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            function createOrder(planId) {
+                
+                $.ajax({
+                    url: "@Url.Action("InitiateOrder", "Plan")",
+                    dataType: "json",
+                    data: { planId: planId },
+                    success: function (resp) {
+                        if (resp.status) {
+                            setRazorPayOptions(resp.data)
+                        } else {
+                            alert(resp.message);
+                        }
+                    },
+                    error: function (resp) {
+                        console.log("Edit Role error:", resp);
+                    }
+                });
+            }
+
+            function setRazorPayOptions(orderId) {
+
+                // var orderId = document.getElementById('razorpay_payment_id').value;
+
+                var options = {
+                    "name": "Riviks Musics",
+                    "description": "Purchase Plan",
+                    "order_id": orderId,
+                    "image": "https://example.com/your_logo",
+                    "prefill": {
+                        "name": "@fullName",
+                        "email": "@userEmail",
+                        "contact": "@userPhoneNo",
+                    },
+                    "notes": {
+                        "address": ""
+                    },
+                    "theme": {
+                        "color": "#3399cc"
+                    }
+                }
+                // Boolean whether to show image inside a white frame. (default: true)
+                options.theme.image_padding = false;
+                options.handler = function (response) {
+                    document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                    document.getElementById('razorpay_order_id').value = orderId;
+                    document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                    document.razorpayForm.submit();
+                };
+                options.modal = {
+                    ondismiss: function () {
+                        console.log("This code runs when the popup is closed");
+                    },
+                    // Boolean indicating whether pressing escape key
+                    // should close the checkout form. (default: true)
+                    escape: true,
+                    // Boolean indicating whether clicking translucent blank
+                    // space outside checkout form should close the form. (default: false)
+                    backdropclose: false
+                };
+                var rzp = new Razorpay(options);
+
+                rzp.open();
+                e.preventDefault();
+            }
+
+            $(".payBtn").click(function (e) {
+                e.preventDefault();
+
+                createOrder($(this).attr("data-id"));
+            });
+        })
+    </script>
+}

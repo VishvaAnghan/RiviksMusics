@@ -25,28 +25,28 @@
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="input-group mb-3">
                                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="Enter Your Email" />
-                               @*  <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-envelope"></span>
-                                    </div>
+                                @*  <div class="input-group-append">
+                                <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                                </div>
                                 </div> *@
                             </div>
                             <span asp-validation-for="Input.Email" class="text-danger"></span>
                             <div class="input-group mb-3">
                                 <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your New Password" />
                                 @* <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-lock"></span>
-                                    </div>
+                                <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                                </div>
                                 </div> *@
                             </div>
                             <span asp-validation-for="Input.Password" class="text-danger"></span>
                             <div class="input-group mb-3">
                                 <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="Enter Your Confirm Password" />
-                               @*  <div class="input-group-append">
-                                    <div class="input-group-text">
-                                        <span class="fas fa-key"></span>
-                                    </div>
+                                @*  <div class="input-group-append">
+                                <div class="input-group-text">
+                                <span class="fas fa-key"></span>
+                                </div>
                                 </div> *@
                             </div>
                             <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
@@ -70,27 +70,26 @@
         </div>
     </div>
 </section>
-@* <div class="col-md-6 col-md-offset-2"> *@
-    <section>
-        @{
-            if ((Model.ExternalLogins?.Count ?? 0) == 0)
-            {
 
-            }
-            else
-            {
-                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                    <div>
-                        <p>
-                            @foreach (var provider in Model.ExternalLogins!)
-                            {
-                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                            }
-                        </p>
-                    </div>
-                </form>
-            }
+<section>
+    @{
+        if ((Model.ExternalLogins?.Count ?? 0) == 0)
+        {
+
         }
-    </section>
-@* </div> *@
-        
+        else
+        {
+            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                <div>
+                    <p>
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                        }
+                    </p>
+                </div>
+            </form>
+        }
+    }
+</section>
+

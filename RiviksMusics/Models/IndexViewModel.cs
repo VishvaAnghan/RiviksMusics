@@ -2,6 +2,7 @@
 
 
 
+
 namespace RiviksMusics.Models
 {
     public class IndexViewModel
@@ -23,5 +24,8 @@ namespace RiviksMusics.Models
         public long? AudioSize { get;  set; }
         public string? USer { get; internal set; }
         public string? ArtistId { get; internal set; }
+        public object ViewSong { get; internal set; }
+        public DateTime UploadDate { get; internal set; }
+
     }
 }
