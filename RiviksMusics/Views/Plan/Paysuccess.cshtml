@@ -1,0 +1,86 @@
+﻿@model IEnumerable<RiviksMusics.Models.PaymentDto>
+
+@{
+    ViewData["Title"] = "Payment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Payment</h1>
+
+@* <p>
+    <a  asp-action="Create" class="btn btn-primary">Create New</a>
+</p> *@
+<table class="table" id="payment">
+    <thead>
+        <tr style="background-color:lightpink">
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                Plan
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpiredPlanDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderId)
+            </th>
+            <th>
+                 @Html.DisplayNameFor(model => model.Status) 
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+         @foreach (var item in Model)
+            {
+        <tr>
+           
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FirstName)
+                    @Html.DisplayFor(modelItem => item.User.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Plan.PlanName)
+                </td>
+                <td>
+                    &#8377;  @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpiredPlanDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TransactionId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <a class="btn btn-primary" asp-action="PaymentPrint" asp-route-id="@item.PaymentId" target="_blank"><i class="fas fa-print"></i></a>
+                </td>
+        
+        </tr>
+        }
+
+    </tbody>
+</table>
+
+@section payment
+{
+    <script src="~/js/payment.js"></script>
+}

@@ -30,9 +30,6 @@ namespace RiviksMusics.Controllers
 
         public  IActionResult Index()
         {
-            /*var LatestAlbums = _context.Album.OrderByDescending(m => m.UploadDate).Take(12).ToList();
-                
-            return View(LatestAlbums);*/
             var latestAlbums = _context.Album.OrderByDescending(m => m.UploadDate).Take(12).ToList();
             var latestSong = _context.Music.OrderByDescending(s => s.UploadDate).FirstOrDefault();
 
@@ -44,8 +41,8 @@ namespace RiviksMusics.Controllers
                 AlbumName = D.AlbumName,
                 AlbumImage = D.AlbumImage,
                 Category = D.Category,
-                
-            }).Take(6).ToList();
+                UploadDate = D.UploadDate
+            }).OrderByDescending(D => D.UploadDate).Take(6).ToList();
 
             var DisplayMusic =  _context.Music
                 .Where(M => M.SelectType == "Person").GroupBy(M => M.ArtistId)
@@ -56,7 +53,7 @@ namespace RiviksMusics.Controllers
                    artistName = (m.FirstOrDefault().User.FirstName + " " + m.FirstOrDefault().User.LastName),
                    SongName = (m.FirstOrDefault().SongName),
                    UploadImage = (m.FirstOrDefault().UploadImage),
-                   AudioSize = ((long)m.FirstOrDefault().AudioSize)
+                   AudioSize = (m.FirstOrDefault().AudioSize)
                }).Take(6).ToList();
 
             var viewModel = new IndexViewModel
@@ -71,7 +68,7 @@ namespace RiviksMusics.Controllers
 
             return View(viewModel);
         }
-        
+
         public async Task<IActionResult> Albums()
         {
             var DisplayAlbum = await _context.Album.Select(D => new Album

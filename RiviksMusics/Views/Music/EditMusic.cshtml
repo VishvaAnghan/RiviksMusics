@@ -199,7 +199,10 @@
                                 $('<option></option>').val(item.id).html(item.fullName)
                             );
                         });
-                      
+                        var selectArtistId = "@Model.ArtistId";
+                        if (selectArtistId !== null && selectArtistId !== "") {
+                            selectArtist.val(selectArtistId);
+                        }
                     },
                     error: function () {
                         alert('Failed to retrieve Artist');

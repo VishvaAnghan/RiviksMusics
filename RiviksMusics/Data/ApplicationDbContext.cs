@@ -24,6 +24,7 @@ namespace RiviksMusics.Data
         {
             base.OnModelCreating(builder);
         }
+        public DbSet<Payment> Payment { get; set; }
     }
       
 }

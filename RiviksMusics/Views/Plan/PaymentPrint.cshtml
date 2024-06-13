@@ -1,0 +1,233 @@
+﻿@model RiviksMusics.Models.PaymentDto
+
+@{
+    ViewData["Title"] = "Invoice";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="invoice">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper" style="margin-left:auto;">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>Invoice</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a asp-action="Payments" asp-controller="Plan">Payment</a></li>
+                            <li class="breadcrumb-item active">Invoice</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        @* <section class="content">
+        <div class="container-fluid">
+        <div class="row">
+        <div class="col-12">
+        <div class="callout callout-info">
+        <h5><i class="fas fa-info"></i> Note:</h5>
+        This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+        </div> *@
+
+
+        <!-- Main content -->
+        <div class="invoice p-3 mb-3" style="border-radius:20px;">
+            <!-- title row -->
+            <div class="row">
+                <div class="col-12">
+                    <h4>
+                        <i class="fas fa-music"></i>&nbsp; Riviks Musics
+                        <small class="float-right">@DateTime.Now.ToString("dd/MM/yyyy")</small>
+                    </h4>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row invoice-info">
+                <div class="col-sm-3 invoice-col"> 
+                        Phone: 12302 65946<br>
+                        Email: Riviksmusics@gmail.com
+                    </address>
+                </div>
+                <!-- /.col -->
+                <div class="col-sm-3 invoice-col">
+                    To
+                    <address>
+                        <strong>User Details</strong><br />
+                        @Model.User.FirstName @Model.User.LastName<br />
+                        @Model.User.Email<br />
+                        @Model.User.Address<br />
+                        @Model.User.PhoneNo<br />
+                        @Model.User.BirthDate.ToString("dd/MM/yyyy")<br />
+                    </address>
+                </div>
+
+                @* <div class="col-sm-3 invoice-col">
+                    To Checking
+                    <address>
+                        <strong>Doctor Details</strong><br />
+                        @Model.User.FirstName @Model.User.LastName<br />
+                        @Model.User.Email<br />
+                        @Model.User.Address<br />
+                        @Model.User.PhoneNo<br />
+                        @Model.User.BirthDate.ToString("dd/MM/yyyy")<br />
+                    </address>
+                </div>
+ *@
+                <!-- /.col -->
+                <div class="col-sm-2 invoice-col">
+                    <b>Invoice No:#@Model.PaymentId</b><br>
+                    @*  <b>Order ID:</b> 4F3S8J<br> *@
+                    <b>@Model.PaymentDate.ToString("dd/MM/yyyy")</b><br>
+                    @*  <b>Account:</b> 968-34567 *@
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- Table row -->
+            <div class="row">
+                <div class="col-12 table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                @* <th>@Html.DisplayNameFor(model => model.PaymentId)</th> *@
+                                <th>@Html.DisplayNameFor(model => model.User)</th>
+                                <th>@Html.DisplayNameFor(model => model.Amount)</th>
+                                <th>@Html.DisplayNameFor(model => model.Plan)</th>
+                                <th>@Html.DisplayNameFor(model => model.PaymentDate)</th>
+                                <th>@Html.DisplayNameFor(model => model.ExpiredPlanDate)</th>
+                                <th>@Html.DisplayNameFor(model => model.TransactionId)</th>
+                                <th>@Html.DisplayNameFor(model => model.OrderId)</th>
+                                <th>@Html.DisplayNameFor(model => model.Status)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(model => model.User.FirstName)
+                                    @Html.DisplayFor(model => model.User.LastName)
+                                </td>
+                             
+                                <td> &#8377; @Html.DisplayFor(model => model.Amount)</td>
+                                <td>@Html.DisplayFor(model => model.Plan.PlanName)</td>
+                                <td> @Html.DisplayFor(model => model.PaymentDate)</td>
+                                <td>@Html.DisplayFor(model => model.ExpiredPlanDate)</td>
+                                <td>@Html.DisplayFor(model => model.TransactionId)</td>
+                                <td> @Html.DisplayFor(model => model.OrderId)</td>
+                                <td><span class="badge badge-success">@Html.DisplayFor(model => model.Status)</span></td>
+                            </tr>
+                            @*  <tr>
+                            <td>1</td>
+                            <td>Need for Speed IV</td>
+                            <td>247-925-726</td>
+                            <td>Wes Anderson umami biodiesel</td>
+                            <td>$50.00</td>
+                            </tr>
+                            <tr>
+                            <td>1</td>
+                            <td>Monsters DVD</td>
+                            <td>735-845-642</td>
+                            <td>Terry Richardson helvetica tousled street art master</td>
+                            <td>$10.70</td>
+                            </tr>
+                            <tr>
+                            <td>1</td>
+                            <td>Grown Ups Blue Ray</td>
+                            <td>422-568-642</td>
+                            <td>Tousled lomo letterpress</td>
+                            <td>$25.99</td>
+                            </tr> *@
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <div class="row">
+                <!-- accepted payments column -->
+                @* <div class="col-6">
+                <p class="lead">Payment Methods:</p>
+                <img src="../../dist/img/credit/visa.png" alt="Visa">
+                <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
+                <img src="../../dist/img/credit/american-express.png" alt="American Express">
+                <img src="../../dist/img/credit/paypal2.png" alt="Paypal">
+
+                <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
+                Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles, weebly ning heekya handango imeem
+                plugg
+                dopplr jibjab, movity jajah plickers sifteo edmodo ifttt zimbra.
+                </p>
+                </div> *@
+                <!-- /.col -->
+                @* <div class="col-6">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tr>
+                                <th style="width:50%;">Diagnosis</th>
+                                <th>Price</th>
+                            </tr>
+                            <tr>
+                                <td><b>Extra Charges</b>:(@Model.ExtraCharges)</td>
+                                <td>@Model.DiagnosisCharges</td>
+                            </tr>
+
+
+                            <tr>
+                                <th>Cases Charges</th>
+                                <td>@Model.Price</td>
+                            </tr>
+
+                            <tr>
+                                <th style="width:50%">Subtotal</th>
+                                <td><b>₹@(Model.DiagnosisCharges + Model.Price)</b></td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div> *@
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+            <!-- this row will not appear when printing -->
+            <div class="row no-print">
+                <div class="col-12">
+                    <button id="print" onclick="appointmentprint()" class="btn btn-primary">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                    @* <a href="~/invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a> *@
+                    @* <button type="button" class="btn btn-success float-right">
+                    <i class="far fa-credit-card"></i> Submit
+                    Payment
+                    </button> *@
+                   @*  <button type="button" id="pdf" class="btn btn-primary float-right" style="margin-right: 5px;">
+                        <i class="fas fa-download"></i> Generate PDF
+                    </button> *@
+                </div>
+            </div>
+        </div>
+        <!-- /.invoice -->
+    </div><!-- /.col -->
+</div>
+<br /><!-- /.row -->
+@* </div><!-- /.container-fluid -->
+        </section>
+<!-- /.content -->
+    </div>
+</div> *@
+@* script>
+  <  document.getElementById('print').addEventListener('click', function () {
+        window.open('@Url.Action("AppointmentPrint","Appointment")', '_blank');
+    });
+</script> *@
+<script>
+    function appointmentprint() {
+        var print = document.getElementById("print");
+        window.print();
+    }
+</script>

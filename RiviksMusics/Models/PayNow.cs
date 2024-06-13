@@ -7,6 +7,8 @@ namespace RiviksMusics.Models
         public int PlanId { get; set; }
         public string? PlanName { get; set; }
         public int Rupees { get; set; }
+
+        public int Days { get; set; }
         public string? Duration { get; set; }
 
         public string? Customername { get; set; }
@@ -17,5 +19,6 @@ namespace RiviksMusics.Models
         public string? TransactionId { get; set; }
         [NotMapped]
         public string? OrderId { get; set; }
+
     }
 }
