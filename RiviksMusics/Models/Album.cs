@@ -28,6 +28,7 @@ namespace RiviksMusics.Models
         public DateTime UploadDate { get; set; }
         [Display(Name = "Album Image")]
         public string? AlbumImage { get; set; }
-       
+        public string? Status { get; set; }
+
     }
 }

@@ -6,6 +6,7 @@ namespace RiviksMusics.Models
     {
         public int CategoryId { get; set; }
         [Required]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "catagory Name can only contain letters.")]
         [Display(Name = "Category Name")]
         public string? CategoryName { get; set; }
         public string? Description { get; set; }

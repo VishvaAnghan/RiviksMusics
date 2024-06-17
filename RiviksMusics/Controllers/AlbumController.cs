@@ -34,7 +34,8 @@ namespace RiviksMusics.Controllers
                 User = m.User,
                 Category = m.Category,
                 UploadDate = m.UploadDate,
-                AlbumImage = m.AlbumImage
+                AlbumImage = m.AlbumImage,
+                Status = m.Status
             }).ToList();
             return View("Album", model);
         }
@@ -67,7 +68,8 @@ namespace RiviksMusics.Controllers
                     ArtistId = album.ArtistId,
                     CategoryId = album.CategoryId,
                     UploadDate = album.UploadDate,
-                    AlbumImage = album.AlbumImage
+                    AlbumImage = album.AlbumImage,
+                    Status = album.Status
                 };
 
                 if (album.AlbumId != 0)
@@ -82,6 +84,7 @@ namespace RiviksMusics.Controllers
                         album.CategoryId = album.CategoryId;
                         album.UploadDate = album.UploadDate;
                         album.AlbumImage = album.AlbumImage;
+                        album.Status = album.Status;
                         _context.SaveChanges();
 
                     }
@@ -118,20 +121,30 @@ namespace RiviksMusics.Controllers
                     CategoryId = x.CategoryId,
                     UploadDate = x.UploadDate,
                     AlbumImage = x.AlbumImage,
+                    Status = x.Status
                 }).FirstOrDefault();
             return View("EditAlbum", editAlbum);
         }
 
         [HttpPost]
-        public IActionResult EditAlbum(Album album, IFormFile? ImageFile)
+        public async Task<IActionResult> EditAlbum(Album album, IFormFile? ImageFile)
         {
-            if (album.Sku.Contains(" "))
+            var existingUser = await _context.Album.FindAsync(album.AlbumId);
+
+            if (existingUser == null)
             {
-                ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+                return NotFound();
             }
-            if (_context.Album.Any(a => a.Sku == album.Sku))
+            if (existingUser.Sku != album.Sku)
             {
-                ModelState.AddModelError("Sku", "SKU already available.");
+                if (album.Sku.Contains(" "))
+                {
+                    ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+                }
+                if (_context.Album.Any(a => a.Sku == album.Sku))
+                {
+                    ModelState.AddModelError("Sku", "SKU already available.");
+                }
             }
 
 
@@ -152,6 +165,7 @@ namespace RiviksMusics.Controllers
                     {
                         Album.AlbumImage = img;
                     }
+                    Album.Status = album.Status;
 
                     _context.Album.Update(Album);
                     _context.SaveChanges();
@@ -175,7 +189,8 @@ namespace RiviksMusics.Controllers
                     ArtistId = x.ArtistId,
                     CategoryId = x.CategoryId,
                     UploadDate = x.UploadDate,
-                    AlbumImage = x.AlbumImage
+                    AlbumImage = x.AlbumImage,
+                    Status = x.Status
                 }).FirstOrDefault();
             return View("DeleteAlbum", deleteAlbum);
         }

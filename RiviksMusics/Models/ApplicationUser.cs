@@ -7,11 +7,14 @@ namespace RiviksMusics.Models
     {
         public string? Sku { get; set; }
         [Display(Name = "First Name")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "First Name can only contain letters.")]
         public string? FirstName { get; set; }
         [Display(Name = "Last Name")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last Name can only contain letters.")]
         public string? LastName { get; set; }
         [MaxLength(10)]
         [Display(Name = "Phone No")]
+        [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Phone No must be 10 digits")]
         public string? PhoneNo { get; set; }
         public string? Address { get; set; }
         [Display(Name = "Birth Date")]

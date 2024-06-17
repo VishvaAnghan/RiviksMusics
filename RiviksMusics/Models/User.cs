@@ -8,16 +8,20 @@ namespace RiviksMusics.Models
         public string? Sku { get; set; }
         [Required]
         [Display(Name = "First Name")]
+        [RegularExpression(@"^[a-zA-Z]+$",ErrorMessage = "First Name can only contain letters.")]
         public string? FirstName { get; set; }
         [Required]
         [Display(Name = "Last Name")]
+        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last Name can only contain letters.")]
         public string? LastName { get; set; }
         [Required]
         [EmailAddress]
+        [RegularExpression(".+\\@.+\\..+",ErrorMessage ="Please Enter Valid Email Address")]
         public string? Email { get; set; }
        
         [Display(Name = "Phone No")]
         [MaxLength(10)]
+        [RegularExpression(@"^[0-9]{10}$",ErrorMessage ="Phone No must be 10 digits")]
         public string? PhoneNo { get; set; }
         public string? Address { get; set; }
         [Required]

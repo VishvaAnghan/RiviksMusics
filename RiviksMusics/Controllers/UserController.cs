@@ -176,19 +176,29 @@ namespace RiviksMusics.Controllers
         }
         public async Task<IActionResult> EditUser(User user)
         {
-            if (user.Sku.Contains(" "))
-            {
-                ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
-            }
-            if (_context.Users.Any(a => a.Sku == user.Sku))
-            {
-                ModelState.AddModelError("Sku", "SKU already available.");
-            }
+            var existingUser = await _context.Users.FindAsync(user.Id);
 
-            var isEmailExist = await _context.Users.Where(x => x.Id != user.Id && x.Email == user.Email).FirstOrDefaultAsync();
-            if (isEmailExist != null)
+            if (existingUser == null)
             {
-                ModelState.AddModelError("Email", "Email already exist");
+                return NotFound();
+            }
+            if (existingUser.Sku != user.Sku)
+            {
+
+                if (user.Sku.Contains(" "))
+                {
+                    ModelState.AddModelError("Sku", "SKU cannot contain spaces.");
+                }
+                if (_context.Users.Any(a => a.Sku == user.Sku))
+                {
+                    ModelState.AddModelError("Sku", "SKU already available.");
+                }
+
+                var isEmailExist = await _context.Users.Where(x => x.Id != user.Id && x.Email == user.Email).FirstOrDefaultAsync();
+                if (isEmailExist != null)
+                {
+                    ModelState.AddModelError("Email", "Email already exist");
+                }
             }
 
             if (ModelState.IsValid)
