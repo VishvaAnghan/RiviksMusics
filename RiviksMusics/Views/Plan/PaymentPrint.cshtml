@@ -52,18 +52,17 @@
                 <div class="col-sm-3 invoice-col"> 
                         Phone: 12302 65946<br>
                         Email: Riviksmusics@gmail.com
-                    </address>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-3 invoice-col">
                     To
                     <address>
                         <strong>User Details</strong><br />
-                        @Model.User.FirstName @Model.User.LastName<br />
-                        @Model.User.Email<br />
-                        @Model.User.Address<br />
-                        @Model.User.PhoneNo<br />
-                        @Model.User.BirthDate.ToString("dd/MM/yyyy")<br />
+                        @Model?.User?.FirstName @Model?.User?.LastName<br />
+                        @Model?.User?.Email<br />
+                        @Model?.User?.Address<br />
+                        @Model?.User?.PhoneNo<br />
+                        @Model?.User?.BirthDate.ToString("dd/MM/yyyy")<br />
                     </address>
                 </div>
 
@@ -81,9 +80,9 @@
  *@
                 <!-- /.col -->
                 <div class="col-sm-2 invoice-col">
-                    <b>Invoice No:#@Model.PaymentId</b><br>
+                    <b>Invoice No:#@Model?.PaymentId</b><br>
                     @*  <b>Order ID:</b> 4F3S8J<br> *@
-                    <b>@Model.PaymentDate.ToString("dd/MM/yyyy")</b><br>
+                    <b>@Model?.PaymentDate.ToString("dd/MM/yyyy")</b><br>
                     @*  <b>Account:</b> 968-34567 *@
                 </div>
                 <!-- /.col -->
@@ -197,7 +196,7 @@
             <!-- this row will not appear when printing -->
             <div class="row no-print">
                 <div class="col-12">
-                    <button id="print" onclick="appointmentprint()" class="btn btn-primary">
+                    <button id="print" onclick="paymentprint()" class="btn btn-primary">
                         <i class="fas fa-print"></i> Print
                     </button>
                     @* <a href="~/invoice-print.html" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a> *@
@@ -226,7 +225,7 @@
     });
 </script> *@
 <script>
-    function appointmentprint() {
+    function paymentprint() {
         var print = document.getElementById("print");
         window.print();
     }

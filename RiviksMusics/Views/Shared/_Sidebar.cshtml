@@ -88,14 +88,17 @@
                         </a>
                     </li>
                 }
-                <li class="nav-item">
-                    <a asp-controller="Music" asp-action="Index" class="nav-link  @ViewBag.ismusic">
-                        <i class="nav-icon fas fa-user"></i>
-                        <p>
-                            Music
-                        </p>
-                    </a>
-                </li>
+                @if (User.IsInRole("Admin") || User.IsInRole("Artist"))
+                {
+                    <li class="nav-item">
+                        <a asp-controller="Music" asp-action="Index" class="nav-link  @ViewBag.ismusic">
+                            <i class="nav-icon fas fa-user"></i>
+                            <p>
+                                Music
+                            </p>
+                        </a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a asp-controller="Plan" asp-action="Index" class="nav-link  @ViewBag.isplan">
                         <i class="nav-icon fas fa-user"></i>

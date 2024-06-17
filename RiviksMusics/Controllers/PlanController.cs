@@ -28,10 +28,12 @@ namespace RiviksMusics.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? invoiceId)
         {
             ViewBag.isplan = "active";
             var plans = this.PlanList();
+
+            ViewBag.invoiceId = invoiceId;
 
             return View("Plan", plans);
         }
@@ -41,9 +43,9 @@ namespace RiviksMusics.Controllers
 
             var plans = new List<PayNow>
             {
-                new PayNow { PlanId = 1, PlanName = "Basic Plan", Rupees = 50, Days = 30, Duration = "1 Month" },
-                new PayNow { PlanId = 2, PlanName = "Standard Plan", Rupees = 250 , Days = 60 , Duration = "6 Month" },
-                new PayNow { PlanId = 3, PlanName = "Premium Plan", Rupees = 150 ,Days = 90 , Duration = "3 Month"}
+                new PayNow { PlanId = 1, PlanName = "Basic Plan", Rupees = 50, Days = 30, Duration = "1 Month"  },
+                new PayNow { PlanId = 2, PlanName = "Standard Plan", Rupees = 150 , Days = 60 , Duration = "3 Month" },
+                new PayNow { PlanId = 3, PlanName = "Premium Plan", Rupees = 250 ,Days = 90 , Duration = "6 Month" }
             };
 
             return plans;
@@ -134,7 +136,7 @@ namespace RiviksMusics.Controllers
             //orderdetails.TransactionId = razorpay_payment_id;
             //orderdetails.OrderId = razorpay_order_id;
 
-            return RedirectToAction("Payments");
+            return RedirectToAction("Index",new { invoiceId = Payment.PaymentId });
         }
 
         public async Task<IActionResult> Payments(List<PaymentDto> model)
@@ -213,10 +215,13 @@ namespace RiviksMusics.Controllers
 
             if (payment != null)
             {
+                //payment.Plan = plans.FirstOrDefault(x => x.PlanId == payment.Plan)Id;
                 payment.Plan = plans.Where(x => x.PlanId == Convert.ToInt32(payment.PlanId ?? 0)).FirstOrDefault();
             }
 
             return View(payment);
         }
+
+        
     }
 }

@@ -102,11 +102,17 @@ namespace RiviksMusics.Controllers
 
             return View(DisplayMusic);
         }
-        public IActionResult Events()
+        public IActionResult Plans()
         {
-            return View();
+            var plans = new List<PayNow>
+            {
+                new PayNow { PlanId = 1, PlanName = "Basic Plan", Rupees = 50, Days = 30, Duration = "1 Month", Style = "background-image:linear-gradient(45deg,#047df4,#01188b);"},
+                new PayNow { PlanId = 2, PlanName = "Standard Plan", Rupees = 150 , Days = 60 , Duration = "3 Month" , Style = "background-image:linear-gradient(45deg,#00ff62,#233543);"},
+                new PayNow { PlanId = 3, PlanName = "Premium Plan", Rupees = 250 ,Days = 90 , Duration = "6 Month" ,Style = "background-image:linear-gradient(45deg,#ff2ff7,#4700ff);"}
+            };
+            return View(plans);
         }
-        public IActionResult News()
+        public IActionResult About()
         {
             return View();
         }
