@@ -17,25 +17,26 @@ namespace RiviksMusics.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, RoleManager<IdentityRole> roleManager, IWebHostEnvironment webHostEnvironment)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, RoleManager<IdentityRole> roleManager, IWebHostEnvironment webHostEnvironment, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
             _roleManager = roleManager;
             _webHostEnvironment = webHostEnvironment;
-
+            _userManager = userManager;
         }
 
-        public  IActionResult Index()
+        public IActionResult Index()
         {
             var latestAlbums = _context.Album.OrderByDescending(m => m.UploadDate).Take(12).ToList();
             var latestSong = _context.Music.OrderByDescending(s => s.UploadDate).FirstOrDefault();
 
             var latestSongs = _context.Music.OrderByDescending(s => s.UploadDate).Take(6).ToList();
-           
-            var albumsong =  _context.Album.Select(D => new IndexViewModel
+
+            var albumsong = _context.Album.Select(D => new IndexViewModel
             {
                 Sku = D.Sku,
                 AlbumName = D.AlbumName,
@@ -44,7 +45,7 @@ namespace RiviksMusics.Controllers
                 UploadDate = D.UploadDate
             }).OrderByDescending(D => D.UploadDate).Take(6).ToList();
 
-            var DisplayMusic =  _context.Music
+            var DisplayMusic = _context.Music
                 .Where(M => M.SelectType == "Person").GroupBy(M => M.ArtistId)
                .Select(m => new IndexViewModel
                {
@@ -63,7 +64,7 @@ namespace RiviksMusics.Controllers
                 LatestSongs = latestSongs,
                 AlbumSong = albumsong,
                 Displaymusic = DisplayMusic
-                
+
             };
 
             return View(viewModel);
@@ -80,6 +81,7 @@ namespace RiviksMusics.Controllers
                 Category = D.Category,
                 UploadDate = D.UploadDate,
                 AlbumImage = D.AlbumImage,
+
             }).OrderBy(D => D.AlbumName).ToListAsync();
             return View(DisplayAlbum);
 
@@ -136,6 +138,11 @@ namespace RiviksMusics.Controllers
 
         public async Task<IActionResult> AlbumDetails(string Sku)
         {
+            if (string.IsNullOrEmpty(Sku))
+            {
+                return NotFound();
+            }
+
             var query = from album in _context.Album
                         where album.Sku == Sku
                         select new MusicAlbumViewModel
@@ -145,23 +152,60 @@ namespace RiviksMusics.Controllers
                             AlbumImage = album.AlbumImage,
                             Category = album.Category,
                             User = album.User,
+                            Status = !string.IsNullOrEmpty(album.Status) && album.Status == "true" ? true : false,
                             Songs = _context.Music.Include(x => x.User).Where(x => x.AlbumId == album.AlbumId).ToList()
                         };
 
-
             var result = await query.FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+
             foreach (var item in result.Songs)
             {
                 var Music = await _context.Music.FindAsync(item.MusicId);
                 if (Music != null)
                 {
-                    Music.ViewSong = ((Music.ViewSong ?? 0) + 1);
+                    Music.ViewSong = (Music.ViewSong ?? 0) + 1;
                     _context.Music.Update(Music);
                     await _context.SaveChangesAsync();
                 }
             }
 
-            return View(result);
+
+            ViewBag.HasSubscription = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Admin"))
+                {
+                    ViewBag.HasSubscription = true;
+                }
+                else
+                {
+                    //var UserId = User.Identity.GetHashCode();
+                    //using (var db = new ApplicationDbContext())
+                    //{
+                    var payment = await _context.Payment
+                            .Where(payment => payment.UserId == user.Id && payment.ExpiredPlanDate > DateTime.Now)
+                            //.OrderByDescending(payment => payment.PaymentDate)
+                            .FirstOrDefaultAsync();
+
+                    if (payment != null)
+                    {
+                        ViewBag.HasSubscription = true;
+                    }
+                    //}
+
+                    //return View(result);
+                }
+            }
+
+            // Handle the case when the user is not authenticated
+            return View(result); // Or redirect to a login page or an appropriate page
         }
 
 
@@ -170,6 +214,10 @@ namespace RiviksMusics.Controllers
             var song = await _context.Music.FirstOrDefaultAsync(m => m.MusicId == id);
             if (song != null)
             {
+
+
+
+
                 var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "audio");
                 var filePath = Path.Combine(uploadsFolder, song.UploadSong);
 
@@ -191,8 +239,12 @@ namespace RiviksMusics.Controllers
 
         public async Task<IActionResult> SingerDetails(string id)
         {
+            /*if (string.IsNullOrEmpty(Sku))
+            {
+                return NotFound();
+            }*/
             var query = from music in _context.Music
-                        where music.SelectType == "Person" && music.User.Sku == id 
+                        where music.SelectType == "Person" && music.User.Sku == id
                         select new MusicAlbumViewModel
                         {
                             AlbumImage = music.UploadImage,
@@ -204,20 +256,56 @@ namespace RiviksMusics.Controllers
                             UploadSong = music.UploadSong,
                             ViewSong = music.ViewSong,
                             DownloadSong = music.DownloadSong,
-                            AudioSize = music.AudioSize
+                            AudioSize = music.AudioSize,
+                            Status = !string.IsNullOrEmpty(music.Status) && music.Status == "true" ? true : false,
                         };
 
-            var result = await query.ToListAsync();
-            foreach (var item in result)
+            var result = await query.FirstOrDefaultAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            foreach (var item in result.Songs)
             {
                 var Music = await _context.Music.FindAsync(item.MusicId);
                 if (Music != null)
                 {
-                    Music.ViewSong = ((Music.ViewSong ??0)+ 1);
+                    Music.ViewSong = ((Music.ViewSong ?? 0) + 1);
                     _context.Music.Update(Music);
                     await _context.SaveChangesAsync();
                 }
             }
+            ViewBag.HasSubscription = false;
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+
+                var roles = await _userManager.GetRolesAsync(user);
+                if (roles.Contains("Admin"))
+                {
+                    ViewBag.HasSubscription = true;
+                }
+                else
+                {
+                    //var UserId = User.Identity.GetHashCode();
+                    //using (var db = new ApplicationDbContext())
+                    //{
+                    var payment = await _context.Payment
+                            .Where(payment => payment.UserId == user.Id && payment.ExpiredPlanDate > DateTime.Now)
+                            //.OrderByDescending(payment => payment.PaymentDate)
+                            .FirstOrDefaultAsync();
+
+                    if (payment != null)
+                    {
+                        ViewBag.HasSubscription = true;
+                    }
+                    //}
+
+                    //return View(result);
+                }
+            }
+
+
             return View(result);
         }
 
@@ -235,7 +323,7 @@ namespace RiviksMusics.Controllers
         }
 
         #region Role
-        
+
         [Authorize(Roles = "Admin")]
         public IActionResult Role(List<Roles> roles)
         {

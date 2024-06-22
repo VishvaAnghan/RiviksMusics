@@ -1,5 +1,4 @@
-﻿
-@model IEnumerable<RiviksMusics.Models.Music>
+﻿@model IEnumerable<RiviksMusics.Models.Music>
 
 @{
     ViewData["Title"] = "Music";
@@ -52,7 +51,10 @@
                 # of Downloads
             </th>
             <th>
-               AudioSize
+                AudioSize
+            </th>
+            <th>
+                Status
             </th>
             <th>
                 Action
@@ -110,6 +112,26 @@
                 </td>
                 <td>
                     @FileSizeHelper.FormatBytes(item.AudioSize ?? 0)
+                </td>
+                <td id="Status">
+                    @if (!string.IsNullOrEmpty(item.Status) && item.Status != "--Select Status Name--")
+                    {
+                        @if (bool.TryParse(item.Status, out bool Status) || item.Status == "Please Status Checked")
+                        {
+                            if (Status)
+                            {
+                                <span style="font-size: 24px;">✅</span>
+                            }
+                            else
+                            {
+                                <span style="font-size: 24px;">❌</span>
+                            }
+                        }
+                        else
+                        {
+                            <span>Invalid value</span>
+                        }
+                    }
                 </td>
                 <td>
                     <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.MusicId"><i class="fas fa-edit"></i></a>

@@ -18,7 +18,6 @@ namespace RiviksMusics.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
 
 
-
         public MusicController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
@@ -26,6 +25,7 @@ namespace RiviksMusics.Controllers
             _userManager = userManager;
             _webHostEnvironment = webHostEnvironment;
         }
+
 
         public async Task<IActionResult> Index(List<Music> musics)
         {
@@ -57,7 +57,8 @@ namespace RiviksMusics.Controllers
                     UploadSong = m.UploadSong,
                     ViewSong = m.ViewSong ?? 0,
                     DownloadSong = m.DownloadSong ?? 0,
-                    AudioSize = m.AudioSize
+                    AudioSize = m.AudioSize,
+                    Status = m.Status
                 }).ToList();
             }
             else if (roles.Contains("Admin"))
@@ -78,7 +79,8 @@ namespace RiviksMusics.Controllers
                      UploadSong = m.UploadSong,
                      ViewSong = m.ViewSong,
                      DownloadSong = m.DownloadSong ?? 0,
-                     AudioSize = m.AudioSize
+                     AudioSize = m.AudioSize,
+                     Status = m.Status
                  }).ToList();
 
             }
@@ -87,7 +89,7 @@ namespace RiviksMusics.Controllers
                 musics = new List<Music>();
             }
 
-
+          
             return View("Music", musics);
         }
 
@@ -114,6 +116,7 @@ namespace RiviksMusics.Controllers
                         ArtistId = music.ArtistId,
                         Description = music.Description,
                         UploadDate = music.UploadDate,
+                        Status = music.Status
 
                     };
 
@@ -129,7 +132,7 @@ namespace RiviksMusics.Controllers
                         Music.UploadSong = audio;
                         Music.AudioSize = AudioFile.Length;
                     }
-
+                    
                     _context.Music.Add(Music);
                     _context.SaveChanges();
                 }
@@ -159,7 +162,8 @@ namespace RiviksMusics.Controllers
                     UploadImage = x.UploadImage,
                     UploadSong = x.UploadSong,
                     ViewSong = x.ViewSong,
-                    DownloadSong = x.DownloadSong
+                    DownloadSong = x.DownloadSong,
+                    Status = x.Status
                 }).FirstOrDefault();
             return View("EditMusic", editMusic);
         }
@@ -207,6 +211,7 @@ namespace RiviksMusics.Controllers
                     }
                     Music.ViewSong = music.ViewSong;
                     Music.DownloadSong = music.DownloadSong;
+                    Music.Status = music.Status;
                     _context.Music.Update(Music);
                     _context.SaveChanges();
                     return RedirectToAction("Index");
@@ -369,6 +374,7 @@ namespace RiviksMusics.Controllers
             return RedirectToAction("Index");
         }
 
+        
     }
 
 }

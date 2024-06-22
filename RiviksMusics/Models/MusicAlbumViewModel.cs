@@ -30,7 +30,8 @@ namespace RiviksMusics.Models
         public object? LastSong { get; internal set; }
         public Music? LatestAlbum { get; internal set; }
         public List<Music>? LatestAlbums { get; internal set; }
+        public bool Status { get; set; }
 
-        
+
     }
 }
