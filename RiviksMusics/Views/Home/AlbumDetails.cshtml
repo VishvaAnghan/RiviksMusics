@@ -11,10 +11,6 @@
 
 <div class="container-fluid row" style="margin-block:auto; display:flex; flex-wrap: wrap; ">
 
-    @* <div class="col-md-5" style="display: block; unicode-bidi: isolate;">
-    <br />
-
-    </div> *@
 
     <div class="container">
 
@@ -53,30 +49,30 @@
 
                             @if (Model.Status && !ViewBag.HasSubscription)
                             {
-                                <dt class="col-sm-2">Status</dt>
-                                <dd class="col-sm-10">
-                                    <span class="text-danger">Locked 🔒</span>
-                                </dd>
+                    <dt class="col-sm-2">Status</dt>
+                    <dd class="col-sm-10">
+                        <span class="text-danger">Locked 🔒</span>
+                    </dd>
                             }
-                        </tr>
+                </tr>
                         @if (Model.Status && !ViewBag.HasSubscription)
                         {
-                        <tr>
-                            <td colspan="2">
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    <a asp-action="Plans" asp-controller="Home" class="btn btn-danger">SUBSCRIBE</a>
-                                }
-                                else
-                                {
-                                    <a asp-action="Index" asp-controller="Dashboard" class="btn btn-danger">
-                                        SUBSCRIBE
-                                    </a>
-                                }
-                            </td>
-                        </tr>
+                    <tr>
+                        <td colspan="2">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                <a asp-action="Plans" asp-controller="Home" class="btn btn-danger">SUBSCRIBE</a>
+                                    }
+                                    else
+                                    {
+                                <a asp-action="Index" asp-controller="Dashboard" class="btn btn-danger">
+                                    SUBSCRIBE
+                                </a>
+                                    }
+                        </td>
+                    </tr>
                         }
-                    </tbody>
+                </tbody>
                 </table>
             </div>
         </div>
@@ -99,7 +95,8 @@
                                 </div>
                                 <div class="song-play-area" style="flex:0 0 calc(100% - 400px);">
                                     <div class="song-name">
-                                        <p>@item?.SongName - <span style="color: #5f5f5f;">&nbsp;@item?.User?.FirstName @item?.User?.LastName</span> - <span style="color: #5f5f5f;">&nbsp; @FileSizeHelper.FormatBytes(item?.AudioSize ?? 0)</span>
+                                        <p>
+                                            @item?.SongName - <span style="color: #5f5f5f;">&nbsp;@item?.User?.FirstName @item?.User?.LastName</span> - <span style="color: #5f5f5f;">&nbsp; @FileSizeHelper.FormatBytes(item?.AudioSize ?? 0)</span>
                                             @if (Model.Status && !ViewBag.HasSubscription)
                                             {
                                                 <span class="text-danger">Locked 🔒</span>

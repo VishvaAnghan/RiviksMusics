@@ -14,12 +14,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
-        
 
-
-
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
@@ -31,9 +26,7 @@
                         </p>
                     </a>
                 </li>
-                <!-- Add icons to the links using the .nav-icon class
-                     with font-awesome or any other icon font library -->
-
+               
                 <li class="nav-item ">
                     <a asp-controller="Dashboard" asp-action="Index" class="nav-link @ViewBag.isdashbord">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -70,7 +63,7 @@
                 {
                     <li class="nav-item">
                         <a asp-controller="Category" asp-action="Index" class="nav-link  @ViewBag.iscategory">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas fa fa-list-alt"></i>
                             <p>
                                 Category
                             </p>
@@ -81,7 +74,7 @@
                 {
                     <li class="nav-item">
                         <a asp-controller="Album" asp-action="Index" class="nav-link  @ViewBag.isalbum">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas ion-ios-albums"></i>
                             <p>
                                 Album
                             </p>
@@ -92,7 +85,7 @@
                 {
                     <li class="nav-item">
                         <a asp-controller="Music" asp-action="Index" class="nav-link  @ViewBag.ismusic">
-                            <i class="nav-icon fas fa-user"></i>
+                            <i class="nav-icon fas fa-music"></i>
                             <p>
                                 Music
                             </p>
@@ -101,7 +94,7 @@
                 }
                 <li class="nav-item">
                     <a asp-controller="Plan" asp-action="Index" class="nav-link  @ViewBag.isplan">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon 	fas fa-gem"></i>
                         <p>
                             Plan
                         </p>
@@ -109,7 +102,7 @@
                 </li>
                 <li class="nav-item">
                     <a asp-controller="Plan" asp-action="Payments" class="nav-link  @ViewBag.ispayment">
-                        <i class="nav-icon fas fa-user"></i>
+                        <i class="nav-icon fas fa fa-credit-card"></i>
                         <p>
                             Payment
                         </p>
