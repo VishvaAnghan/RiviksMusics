@@ -21,24 +21,30 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12" style="align-items:start;">
+               
+                    <h2 class=" listen ">
 
-                <h2 class=" listen ">
-                    Listen Song
-                </h2>
+                    Listen Song &nbsp;
+                    @if (isAnyLocked && !ViewBag.HasSubscription)
+                    {
+                        
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a asp-action="Plans" asp-controller="Home" class="btn btn-danger">
+                                SUBSCRIBE
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-action="Index" asp-controller="Dashboard" class="btn btn-danger">
+                                SUBSCRIBE
+                            </a>
+                        }
+                        }
+                    </h2>
+                
             </div>
-            @*  @if (isAnyLocked && User.Identity.IsAuthenticated)
-            {
-            <a asp-action="Plans" asp-controller="Home" class="btn btn-danger">
-            SUBSCRIBE
-            </a>
-            }
-            else
-            {
-            <a asp-action="Index" asp-controller="Dashboard" class="btn btn-danger">
-            SUBSCRIBE
-            </a>
-            }
-            *@
+            
         </div>
         <div class="row">
             @foreach (var item in Model)
@@ -85,13 +91,13 @@
                             else
                             {
                                 <a href="@Url.Action("DownloadFile", "Home" , new {id = item?.MusicId})" style="background-color:#262626; border-radius: 50px;  padding: 10px; width: 110%; text-align: center; transition: .5s; margin-bottom: 50%; text-size-adjust:auto;" data-toggle="tooltip" title="Download">
-                                    <i class="fa fa-download" style="color:white"> &nbsp;&nbsp;  @(item?.DownloadSong ?? 0) </i>
+                                    <i class="fa fa-download" style="color:white"> &nbsp;&nbsp;  @FileSizeHelper.ToShorthand(item?.DownloadSong ?? 0) </i>
                                 </a>
                             }
                         </div>
                         <div class="d-flex align-items-center pl-2" style="height: 100px;">
                             <a style="background-color:#262626; border-radius: 50px;  padding: 10px; width: 110%; text-align: center; transition: .5s; margin-bottom: 50%; text-size-adjust:auto;" data-toggle="tooltip" title="Views">
-                                <i class="fa fa-eye" style="color:white"> &nbsp;&nbsp;  @(item?.ViewSong ?? 0) </i>
+                                <i class="fa fa-eye" style="color:white"> &nbsp;&nbsp; @FileSizeHelper.ToShorthand(item?.ViewSong ?? 0) </i>
                             </a>
                         </div>
 

@@ -25,10 +25,7 @@ namespace RiviksMusics.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
-        public interface IEmailSender
-        {
-            Task SendEmailAsync(string email, string subject, string message);
-        }
+       
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,

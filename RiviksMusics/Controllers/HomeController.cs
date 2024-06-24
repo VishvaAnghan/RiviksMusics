@@ -186,26 +186,18 @@ namespace RiviksMusics.Controllers
                 }
                 else
                 {
-                    //var UserId = User.Identity.GetHashCode();
-                    //using (var db = new ApplicationDbContext())
-                    //{
+
                     var payment = await _context.Payment
                             .Where(payment => payment.UserId == user.Id && payment.ExpiredPlanDate > DateTime.Now)
-                            //.OrderByDescending(payment => payment.PaymentDate)
                             .FirstOrDefaultAsync();
 
                     if (payment != null)
                     {
                         ViewBag.HasSubscription = true;
                     }
-                    //}
-
-                    //return View(result);
                 }
             }
-
-            // Handle the case when the user is not authenticated
-            return View(result); // Or redirect to a login page or an appropriate page
+            return View(result);
         }
 
 
@@ -236,13 +228,8 @@ namespace RiviksMusics.Controllers
             return NotFound();
 
         }
-
         public async Task<IActionResult> SingerDetails(string id)
         {
-            /*if (string.IsNullOrEmpty(Sku))
-            {
-                return NotFound();
-            }*/
             var query = from music in _context.Music
                         where music.SelectType == "Person" && music.User.Sku == id
                         select new MusicAlbumViewModel
@@ -257,15 +244,11 @@ namespace RiviksMusics.Controllers
                             ViewSong = music.ViewSong,
                             DownloadSong = music.DownloadSong,
                             AudioSize = music.AudioSize,
-                            Status = !string.IsNullOrEmpty(music.Status) && music.Status == "true" ? true : false,
+                            Status = !string.IsNullOrEmpty(music.Status) && music.Status == "true" ? true : false
                         };
 
-            var result = await query.FirstOrDefaultAsync();
-            if (result == null)
-            {
-                return NotFound();
-            }
-            foreach (var item in result.Songs)
+            var result = await query.ToListAsync();
+            foreach (var item in result)
             {
                 var Music = await _context.Music.FindAsync(item.MusicId);
                 if (Music != null)
@@ -287,27 +270,21 @@ namespace RiviksMusics.Controllers
                 }
                 else
                 {
-                    //var UserId = User.Identity.GetHashCode();
-                    //using (var db = new ApplicationDbContext())
-                    //{
                     var payment = await _context.Payment
-                            .Where(payment => payment.UserId == user.Id && payment.ExpiredPlanDate > DateTime.Now)
-                            //.OrderByDescending(payment => payment.PaymentDate)
-                            .FirstOrDefaultAsync();
+                        .Where(payment => payment.UserId == user.Id && payment.ExpiredPlanDate > DateTime.Now)
+                        .FirstOrDefaultAsync();
 
                     if (payment != null)
                     {
                         ViewBag.HasSubscription = true;
                     }
-                    //}
-
-                    //return View(result);
                 }
+
             }
-
-
             return View(result);
         }
+
+
 
         public IActionResult ArtistRole()
         {
